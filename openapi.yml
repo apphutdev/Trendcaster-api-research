@@ -1,0 +1,267 @@
+openapi: 3.0.0
+info:
+  version: 1.1.0
+  title: Data365 - Social Media API
+  description: >
+    # Overview
+
+    Data365 provides Social Media APIs for Developers.
+
+    Expand your social media impact and strengthen social media listening capabilities with any kind of data publicity available in the network.
+
+    You can get reliable real-time data from Social Media Search APIs for <a href="https://api.data365.co/v1.1/facebook/docs" target=_blank>Facebook</a>,
+        <a href="https://api.data365.co/v1.1/instagram/docs" target=_blank>Instagram</a>, <a href="https://api.data365.co/v1.1/reddit/docs" target=_blank>Reddit</a>,
+        <a href="https://api.data365.co/v1.1/threads/docs" target=_blank>Threads</a>, <a href="https://api.data365.co/v1.1/tiktok/docs" target=_blank>TikTok</a>
+        and <a href="https://api.data365.co/v1.1/twitter/docs" target=_blank>Twitter</a>.
+
+    ## Who it’s good for
+
+    Data365's APIs are great for companies and organizations that want to monitor what people are feeling and saying about their brand on social media
+
+    ## Products supported
+
+    The Data365 platform is organized into four different products: Facebook API, Instagram API, Twitter API, and TikTok API.
+
+    With the API you can query profiles data, post data, search for posts or profiles by hashtag and carry out other tasks.
+
+    ## Stay Informed and Get Support
+
+    These pages of our <a href="https://datadevportal.com/" target=_blank>Client portal</a> will help you find all the resources and helpful materials to assist you in utilizing our API to its fullest potential:
+
+      - Look into our <a href="https://data365.upvotyfeedback.com/changelog" target=_blank>Changelog</a> o stay on top of the latest features.
+      - Read the <a href="https://datadevportal.com/guides#help-articles" target=_blank>Useful guides</a> and <a href="https://datadevportal.com/faq" target=_blank>FAQ</a> sections to find answers to your questions.
+      - Visit the <a href="https://www.postman.com/data365/workspace/social-media-api/overview" target=_blank>Postman page</a> to streamline your API testing and integration process.
+
+    Reach out to our <a href="mailto:alina@data365.co">Support manager by email</a> if you still have questions.
+
+    # API operation algorithm
+
+    Our API is based on a REST API architectural style that helps apply standard RESTful principles at scale, fetch data consistently, and ultimately provide a well-structured end-to-end developer experience.
+    Methods for interacting include such request methods as POST and GET requests.
+
+    ## Step 1. Create request
+
+    Create a POST request to start the update process. POST request enables you to receive updated data directly from the social network.
+
+    At this stage, we call upon the social network and update the Data365 databases in conformance with your request.
+      - If the parameter `callback_url` was specified when creating the task, then a POST request will be made to this URL after the update is completed. In this case, you can skip subsequent Steps 2 and 3.
+
+    E.g.
+
+    [Create task (POST request) to update a profile](#tag/Tiktok-profile/paths/~1tiktok~1profile~1{profile_id}~1update/post)
+
+    ## Step 2. Get status
+
+    If the url callback was not specified, the next step is to make a GET request to get the updated status of your POST request.
+
+      - The field `data.status` will display the current update status
+        - `created` - task in line
+        - `pending` - update coming
+        - `finished` - successfully completed
+        - `fail` - completed with an error
+        - `canceled` - task canceled by user
+        - `unknown` - if the update did not start
+      - Repeat this step until the update is complete
+
+    E.g.
+
+    [Get status of an update task for a profile](#tag/Tiktok-profile/paths/~1tiktok~1profile~1{profile_id}~1update/get)
+
+    ## Step 3. Get data
+
+    Create a GET request to get cached data from the databases of Data365
+
+
+    E.g.
+
+    [Fetch cached data for a profile](#tag/Tiktok-profile/paths/~1tiktok~1profile~1{profile_id}/get)
+
+    <br/>
+    API response always contains fields:
+      - `data` - contains the data that the request should return. May be empty
+      - `error` - contains an error code in the field `code` and error description in the field `message`. May be
+    empty if there is no error.
+      - `status` - `ok`, if the request is ok, `fail` - if any error occurred
+
+    # Useful tips
+
+    ## Paginate through a large set of results
+
+    API calls that return a large number of entities are broken up into multiple pages of results. One page can contain no more than 100 results at a time.
+    You might need to make multiple GET requests with slightly varied query parameters to paginate through results and iteratively receive all the data the API has collected.
+    <div align="center"><img alt="cursor" src="/v1.1/tiktok/static/cursor.png#center" /></div><br/>
+
+    ## Set up an auto-update task to monitor
+
+    You can create a one-time task or set up a monitoring so that the same task repeats automatically and updates the data within a regular time-span.
+    <div align="center"><img alt="auto_update" src="/v1.1/tiktok/static/auto_update.png#center" /></div><br/>
+
+    ## Calculate the credits volume
+
+    The Subscription Package is limited by credit per month. credits are deducted only for POST requests. Our API allows you to receive data of different types and each request has its own credits’ value.
+
+
+    - [Here you can see the value of each request type.](#section/API-credits-quota)
+
+    - <a href="https://datadevportal.com/credits-calculator" target=_blank>See a calculator to roughly estimate your future volumes</a>
+
+    - [Set up the endpoints to get the detailed credits usage statistics](#tag/Tiktok-API-credits-usage/paths/~1tiktok1stats/get)
+
+    # API credits quota
+
+    ## Tiktok post
+
+    1. A post => 1 credit
+      - if post has 0 comments => 1 credit
+      - if post has 100 comments, and fetching of comments is disabled => 1 credit
+    1. A post with comments fetched => 1 credit for a post + 1 credit per 10 comments, at least 5 credits total
+      - if post has 0 comments => 1 credit (no comments nave been fetched)
+      - if post has 14 comments => 5 credits
+      - if post has 50 comments => 1 + 5 credits
+      - if post has 51 comments => 1 + 6 credits
+      - if post has 100 comments, and number of comments is limited to 70 => 1 + 7 credits
+      - if post has 100 comments, and number of comments is limited to 71 => 1 + 8 credits
+      - if post has 100 comments, and only 63 is visible => 1 + 7 credits
+
+    ## Tiktok profile
+
+    1. A profile - 9 credits
+    1. A profile with posts fetched - 9 credits + 1 credit per post
+      - if profile has 0 posts => 9 credits (no posts have been fetched)
+      - if profile has 42 feed posts => 9 + 42 credits
+    2. `page_screenshot` (Take full page screenshot) => +15 credits per profile.
+
+    ## Tiktok search for posts by hashtag / music / keywords
+
+    1. A search for posts - 7 credits
+    1. A search for posts with posts fetched - 7 credits + 1 credit per post
+      - if search results have 0 posts => 7 credits (no posts have been fetched)
+      - if search results have 42 posts => 7 + 42 credits
+
+    ## Tiktok search for profiles
+
+    1. A search for profiles - 7 credits
+    1. A search for profiles with profiles fetched - 7 credits + 1 credit per profile
+      - if search results have 0 profiles => 7 credits (no profiles have been fetched)
+      - if search results have 42 profiles => 7 + 42 credits
+
+    # API limitations
+
+    1. The total number of POST and GET requests should not exceed 100 requests per second.
+
+    2. The queue size cannot exceed 100,000 tasks of the same type at any given time.
+    If the queue exceeds this limit, the oldest tasks will be removed from the queue and assigned a "canceled" status.
+    No credits will be charged for tasks that are canceled.
+
+    3. A task in the "created" status cannot remain in the queue for longer than 7 days.
+    If the task is not processed within this time frame, it will be removed from the queue automatically.
+
+    4. The system stores information about task statuses (finished, failed, canceled)
+    for 7 days after the task reaches one of these statuses.
+
+    5. Data stored in S3 using the dedicated parameter of the API will be retained for a maximum of 3 months.
+
+    6. Data365 does not impose specific limitations on the number of results that can be retrieved in a single API call.
+    For each endpoint the volume of data that can be accessed is contingent on the availability of public information
+    from each social network itself. Monitoring or re-filtering queries can allow to increase the volume of data collection.
+    For detailed information, please refer to our presentation or consult with your account manager.
+
+    7. Only tasks in the queue - "created" status - can be canceled.
+    Once a task moves to "pending", it cannot be canceled and will proceed to either "finished" or "failed".
+    If finished, credits will be deducted; if failed, no credits will be charged.
+
+  x-logo:
+    url: /v1.1/tiktok/static/logo.png
+    href: https://data365.co/
+
+servers:
+  - url: https://api.data365.co/v1.1
+
+x-tagGroups:
+  - name: Tiktok
+    tags:
+      - Tiktok profile
+      - Tiktok post
+      - Tiktok post search
+      - Tiktok profile search
+      - Tiktok hashtag search
+      - Tiktok search by music
+      - Tiktok comments and replies
+      - Tiktok auto-update tasks
+      - Tiktok queues
+      - API usage
+
+paths:
+  ###
+  #     TikTok
+  ###
+
+  # TikTok tasks
+  /tiktok/{item_type}/tasks:
+    $ref: "tiktok.yml#/paths/tiktok_tasks_list"
+  /tiktok/{item_type}/tasks/{task_id}:
+    $ref: "tiktok.yml#/paths/tiktok_task"
+  # TikTok post
+  /tiktok/profile/{profile_id}/{section}/posts/{post_id}/update:
+    $ref: "tiktok.yml#/paths/tiktok_post_update"
+  /tiktok/profile/{profile_id}/{section}/posts/{post_id}:
+    $ref: "tiktok.yml#/paths/tiktok_post"
+  /tiktok/profile/{profile_id}/{section}/posts/{post_id}/comments:
+    $ref: "tiktok.yml#/paths/tiktok_post_comments"
+  # TikTok profile
+  /tiktok/profile/{profile_id}/update:
+    $ref: "tiktok.yml#/paths/tiktok_profile_update"
+  /tiktok/profile/{profile_id}:
+    $ref: "tiktok.yml#/paths/tiktok_profile"
+  /tiktok/profile/{profile_id}/{section}/posts:
+    $ref: "tiktok.yml#/paths/tiktok_profile_posts"
+  /tiktok/profile/{profile_id}/followers/profiles:
+    $ref: "tiktok.yml#/paths/tiktok_profile_followers"
+  /tiktok/profile/{profile_id}/following/profiles:
+    $ref: "tiktok.yml#/paths/tiktok_profile_following"
+
+  # TikTok search by hashtag
+  /tiktok/search/hashtag/{hashtag_id}/update:
+    $ref: "tiktok.yml#/paths/tiktok_hashtag_search_update"
+  /tiktok/search/hashtag/{hashtag_id}:
+    $ref: "tiktok.yml#/paths/tiktok_hashtag_search"
+  /tiktok/search/hashtag/{hashtag_id}/posts:
+    $ref: "tiktok.yml#/paths/tiktok_hashtag_search_posts"
+  # TikTok search by music
+  /tiktok/search/music/{music_title}/{music_id}/update:
+    $ref: "tiktok.yml#/paths/tiktok_music_search_update"
+  /tiktok/search/music/{music_title}/{music_id}:
+    $ref: "tiktok.yml#/paths/tiktok_music_search"
+  /tiktok/search/music/{music_title}/{music_id}/posts:
+    $ref: "tiktok.yml#/paths/tiktok_music_search_posts"
+  # TikTok search post
+  /tiktok/search/post/update:
+    $ref: "tiktok.yml#/paths/tiktok_post_search_update"
+  /tiktok/search/post/items:
+    $ref: "tiktok.yml#/paths/tiktok_post_search_posts"
+  # TikTok search profile
+  /tiktok/search/profile/update:
+    $ref: "tiktok.yml#/paths/tiktok_profile_search_update"
+  /tiktok/search/profile/items:
+    $ref: "tiktok.yml#/paths/tiktok_profile_search_profiles"
+  # TikTok comment
+  /tiktok/comment/{comment_id}:
+    $ref: "tiktok.yml#/paths/tiktok_comment"
+  /tiktok/comment/{comment_id}/replies:
+    $ref: "tiktok.yml#/paths/tiktok_comment_replies"
+  # TikTok queues
+  /tiktok/queues/size:
+    $ref: "tiktok.yml#/paths/tiktok_queues_size"
+  # API usage
+  /stats/usage:
+    $ref: "tiktok.yml#/paths/stats_usage"
+
+components:
+  securitySchemes:
+    accessTokenAuthorization:
+      type: apiKey
+      in: query
+      name: access_token
+
+security:
+  - accessTokenAuthorization: []

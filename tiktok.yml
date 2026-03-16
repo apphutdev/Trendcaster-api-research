@@ -1,0 +1,2348 @@
+paths:
+  tiktok_tasks_list:
+    get:
+      summary: List of the created tasks
+      tags:
+        - Tiktok auto-update tasks
+      parameters:
+        - name: item_type
+          in: path
+          description: >
+            Type of the target item
+          required: true
+          schema:
+            type: string
+            enum:
+              - post
+              - profile
+              - search/post
+              - search/profile
+              - search/hashtag
+              - search/music
+        - name: task_type
+          in: query
+          description: >
+            Select what tasks to retrieve.
+
+             - "update" - simple queued task for updating an item once.
+             - "auto_update" - tasks for monitoring items for some time.
+          schema:
+            type: string
+            enum:
+              - "update"
+              - "auto_update"
+            default: "update"
+        - $ref: "commons.yml#/components/parameters/PaginationCursor"
+        - $ref: "commons.yml#/components/parameters/PaginationMaxPageSize"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - items
+                      - page_info
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "commons.yml#/components/schemas/TaskInfo"
+                      page_info:
+                        $ref: "commons.yml#/components/schemas/PageInfo"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_task:
+    delete:
+      summary: Cancel created task
+      tags:
+        - Tiktok auto-update tasks
+      parameters:
+        - name: item_type
+          in: path
+          description: >
+            Type of the target item
+          required: true
+          schema:
+            type: string
+            enum:
+              - post
+              - profile
+              - search/post
+              - search/profile
+              - search/hashtag
+              - search/music
+        - $ref: "commons.yml#/components/parameters/TaskId"
+      responses:
+        "200":
+          $ref: "commons.yml#/components/responses/TaskCanceled"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_post_update:
+    post:
+      summary: Post update task
+      tags:
+        - Tiktok post
+      parameters:
+        - $ref: "#/components/parameters/TiktokProfileID"
+        - name: section
+          in: path
+          description: Section of a profile
+          required: true
+          schema:
+            type: string
+            enum:
+              - feed
+        - $ref: "#/components/parameters/TiktokPostID"
+        - name: load_comments
+          in: query
+          description: >
+            Enable or disable fetching of comments for the post.
+          schema:
+            default: false
+            type: boolean
+        - name: max_comments
+          in: query
+          description: >
+            Set limit for the number of comments that will be fetched for the post.
+
+             - Values < 25 will drastically increase the update process performance.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+        - name: load_replies
+          in: query
+          description: >
+            Enable or disable fetching of replies for the comments.
+          schema:
+            default: false
+            type: boolean
+        - name: upload_video_cover_url_s3
+          in: query
+          description: >
+            Upload video cover image to external data storage.
+
+
+            +1 credit per image.
+          schema:
+            default: false
+            type: boolean
+        - $ref: "commons.yml#/components/parameters/CallbackURI"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateInterval"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateExpireAt"
+      responses:
+        "202":
+          $ref: "commons.yml#/components/responses/TaskCreated"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+    get:
+      summary: Status of the post task
+      tags:
+        - Tiktok post
+      parameters:
+        - $ref: "#/components/parameters/TiktokProfileID"
+        - name: section
+          in: path
+          description: Section of a profile
+          required: true
+          schema:
+            type: string
+            enum:
+              - feed
+        - $ref: "#/components/parameters/TiktokPostID"
+      responses:
+        "200":
+          $ref: "commons.yml#/components/responses/TaskInfo"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_post:
+    get:
+      summary: Cached post data
+      tags:
+        - Tiktok post
+      parameters:
+        - $ref: "#/components/parameters/TiktokProfileID"
+        - name: section
+          in: path
+          description: Section of a profile
+          required: true
+          schema:
+            type: string
+            enum:
+              - feed
+        - $ref: "#/components/parameters/TiktokPostID"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    nullable: true
+                    $ref: "#/components/schemas/TiktokPost"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "404":
+          $ref: "commons.yml#/components/responses/NotFound"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_post_comments:
+    get:
+      summary: Cached post comments
+      tags:
+        - Tiktok post
+      parameters:
+        - $ref: "#/components/parameters/TiktokProfileID"
+        - name: section
+          in: path
+          description: Section of a profile
+          required: true
+          schema:
+            type: string
+            enum:
+              - feed
+        - $ref: "#/components/parameters/TiktokPostID"
+        - $ref: "commons.yml#/components/parameters/GetFilterFromDate"
+        - $ref: "commons.yml#/components/parameters/FilterToDate"
+        - $ref: "commons.yml#/components/parameters/OrderBy"
+        - $ref: "commons.yml#/components/parameters/PaginationCursor"
+        - $ref: "commons.yml#/components/parameters/PaginationMaxPageSize"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - items
+                      - page_info
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TiktokComment"
+                      page_info:
+                        $ref: "commons.yml#/components/schemas/PageInfo"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_comment:
+    get:
+      summary: Cached comment data
+      tags:
+        - Tiktok comments and replies
+      description: >
+        Before getting data about comments and replies, you need to create a [Task to update a post](#tag/Tiktok-post/paths/~1tiktok~1post~1{post_id}~1update/post) with the parameter “load_comments”.
+      parameters:
+        - $ref: "#/components/parameters/TiktokCommentID"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    nullable: true
+                    $ref: "#/components/schemas/TiktokComment"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "404":
+          $ref: "commons.yml#/components/responses/NotFound"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_comment_replies:
+    get:
+      summary: Cached comment replies
+      tags:
+        - Tiktok comments and replies
+      parameters:
+        - $ref: "#/components/parameters/TiktokCommentID"
+        - $ref: "commons.yml#/components/parameters/GetFilterFromDate"
+        - $ref: "commons.yml#/components/parameters/FilterToDate"
+        - $ref: "commons.yml#/components/parameters/OrderBy"
+        - $ref: "commons.yml#/components/parameters/PaginationCursor"
+        - $ref: "commons.yml#/components/parameters/PaginationMaxPageSize"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - items
+                      - page_info
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TiktokComment"
+                      page_info:
+                        $ref: "commons.yml#/components/schemas/PageInfo"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_profile_update:
+    post:
+      summary: Profile update task
+      tags:
+        - Tiktok profile
+      parameters:
+        - $ref: "#/components/parameters/TiktokProfileID"
+        - $ref: "commons.yml#/components/parameters/PostFilterFromDate"
+        - name: load_feed_posts
+          in: query
+          description: >
+            Enable or disable fetching of posts from the feed section of the profile.
+
+
+            +1 credit per post.
+          schema:
+            default: false
+            type: boolean
+        - name: max_posts
+          in: query
+          description: >
+            Set limit for the number of posts that will be fetched for the profile.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+        - name: load_comments
+          in: query
+          description: >
+            Enable or disable fetching of comments for the post.
+
+
+            +5 (at least) credits per post.
+          schema:
+            default: false
+            type: boolean
+        - name: max_comments
+          in: query
+          description: >
+            Set limit for the number of comments that will be fetched for the post.
+
+             - Values < 25 will drastically increase the update process performance.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+        - name: load_replies
+          in: query
+          description: >
+            Enable or disable fetching of replies for the comments.
+          schema:
+            default: false
+            type: boolean
+        - name: load_followers
+          in: query
+          description: >
+            Enable or disable fetching of followers of the profile.
+
+             +1 credit per follower.
+          schema:
+            default: false
+            type: boolean
+        - name: load_followers_data
+          in: query
+          description: >
+            Fetch all fields of followers profiles.
+
+            - This parameter can be enabled only if load_followers parameter is enabled.
+
+
+            +9 credits per follower.
+          schema:
+            default: false
+            type: boolean
+        - name: max_followers
+          in: query
+          description: >
+            Set a limit for the number of followers that will be fetched for the profile.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+          example: 50
+        - name: load_following
+          in: query
+          description: >
+            Enable or disable fetching of following of the profile.
+
+             +1 credit per follower.
+          schema:
+            default: false
+            type: boolean
+        - name: load_following_data
+          in: query
+          description: >
+            Fetch all fields of following profiles.
+
+            - This parameter can be enabled only if load_following parameter is enabled.
+
+
+            +9 credits per follower.
+          schema:
+            default: false
+            type: boolean
+        - name: max_following
+          in: query
+          description: >
+            Set a limit for the number of following that will be fetched for the profile.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+          example: 50
+        - name: page_screenshot
+          in: query
+          description: >
+            Take full page screenshot.
+
+
+            - +15 credits per profile.
+          schema:
+            default: false
+            type: boolean
+        - $ref: "commons.yml#/components/parameters/CallbackURI"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateInterval"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateExpireAt"
+      responses:
+        "202":
+          $ref: "commons.yml#/components/responses/TaskCreated"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+    get:
+      summary: Status of the profile task
+      tags:
+        - Tiktok profile
+      parameters:
+        - $ref: "#/components/parameters/TiktokProfileID"
+      responses:
+        "200":
+          $ref: "commons.yml#/components/responses/TaskInfo"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_profile:
+    get:
+      summary: Cached profile data
+      tags:
+        - Tiktok profile
+      parameters:
+        - $ref: "#/components/parameters/TiktokProfileID"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    nullable: true
+                    $ref: "#/components/schemas/TiktokProfile"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "404":
+          $ref: "commons.yml#/components/responses/NotFound"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_profile_posts:
+    get:
+      summary: Cached profile posts
+      tags:
+        - Tiktok profile
+      parameters:
+        - $ref: "#/components/parameters/TiktokProfileID"
+        - name: section
+          in: path
+          description: Section of a profile
+          required: true
+          schema:
+            type: string
+            enum:
+              - feed
+        - $ref: "commons.yml#/components/parameters/GetFilterFromDate"
+        - $ref: "commons.yml#/components/parameters/FilterToDate"
+        - $ref: "commons.yml#/components/parameters/FilterTextSearchQuery"
+        - $ref: "commons.yml#/components/parameters/OrderBy"
+        - $ref: "commons.yml#/components/parameters/PaginationCursor"
+        - $ref: "commons.yml#/components/parameters/PaginationMaxPageSize"
+        - $ref: "commons.yml#/components/parameters/FilterTextLanguage"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - items
+                      - page_info
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TiktokPost"
+                      page_info:
+                        $ref: "commons.yml#/components/schemas/PageInfo"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_profile_followers:
+    get:
+      summary: Cached profile followers profiles
+      tags:
+        - Tiktok profile
+      parameters:
+        - $ref: "#/components/parameters/TiktokProfileID"
+        - $ref: "commons.yml#/components/parameters/OrderByID"
+        - $ref: "commons.yml#/components/parameters/PaginationCursor"
+        - $ref: "commons.yml#/components/parameters/PaginationMaxPageSize"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - items
+                      - page_info
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TiktokProfile"
+                      page_info:
+                        $ref: "commons.yml#/components/schemas/PageInfo"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_profile_following:
+    get:
+      summary: Cached profile following profiles
+      tags:
+        - Tiktok profile
+      parameters:
+        - $ref: "#/components/parameters/TiktokProfileID"
+        - $ref: "commons.yml#/components/parameters/OrderByID"
+        - $ref: "commons.yml#/components/parameters/PaginationCursor"
+        - $ref: "commons.yml#/components/parameters/PaginationMaxPageSize"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - items
+                      - page_info
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TiktokProfile"
+                      page_info:
+                        $ref: "commons.yml#/components/schemas/PageInfo"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_hashtag_search_update:
+    post:
+      summary: Hashtag search update task
+      tags:
+        - Tiktok hashtag search
+      parameters:
+        - $ref: "#/components/parameters/TiktokHashtagID"
+        - name: load_posts
+          in: query
+          description: >
+            Enable or disable fetching of posts from the search results.
+          schema:
+            default: true
+            type: boolean
+        - name: max_posts
+          in: query
+          description: >
+            Set limit for the number of posts that will be fetched for the search.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+        - name: load_comments
+          in: query
+          description: >
+            Enable or disable fetching of comments for the post.
+
+            +1 credit per post.
+          schema:
+            default: false
+            type: boolean
+        - name: max_comments
+          in: query
+          description: >
+            Set limit for the number of comments that will be fetched for the post.
+
+             - Values < 25 will drastically increase the update process performance.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+        - name: load_replies
+          in: query
+          description: >
+            Enable or disable fetching of replies for the comments.
+          schema:
+            default: false
+            type: boolean
+        - name: upload_video_cover_url_s3
+          in: query
+          description: >
+            Upload video cover image to external data storage.
+
+
+            +1 credit per image.
+          schema:
+            default: false
+            type: boolean
+        - $ref: "commons.yml#/components/parameters/CallbackURI"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateInterval"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateExpireAt"
+      responses:
+        "202":
+          $ref: "commons.yml#/components/responses/TaskCreated"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+    get:
+      summary: Status of the search task
+      tags:
+        - Tiktok hashtag search
+      parameters:
+        - $ref: "#/components/parameters/TiktokHashtagID"
+      responses:
+        "200":
+          $ref: "commons.yml#/components/responses/TaskInfo"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_hashtag_search:
+    get:
+      summary: Search task details
+      tags:
+        - Tiktok hashtag search
+      parameters:
+        - $ref: "#/components/parameters/TiktokHashtagID"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    nullable: true
+                    $ref: "#/components/schemas/TiktokHashtagSearch"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "404":
+          $ref: "commons.yml#/components/responses/NotFound"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_hashtag_search_posts:
+    get:
+      summary: Cached posts from a hashtag search
+      tags:
+        - Tiktok hashtag search
+      parameters:
+        - $ref: "#/components/parameters/TiktokHashtagID"
+        - $ref: "commons.yml#/components/parameters/GetFilterFromDate"
+        - $ref: "commons.yml#/components/parameters/FilterToDate"
+        - $ref: "commons.yml#/components/parameters/FilterTextSearchQuery"
+        - $ref: "commons.yml#/components/parameters/OrderBy"
+        - $ref: "commons.yml#/components/parameters/PaginationCursor"
+        - $ref: "commons.yml#/components/parameters/PaginationMaxPageSize"
+        - $ref: "commons.yml#/components/parameters/FilterTextLanguage"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - items
+                      - page_info
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TiktokPost"
+                      page_info:
+                        $ref: "commons.yml#/components/schemas/PageInfo"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_music_search_update:
+    post:
+      summary: Music search update task
+      tags:
+        - Tiktok search by music
+      parameters:
+        - $ref: "#/components/parameters/TiktokMusicID"
+        - $ref: "#/components/parameters/TiktokMusicTitle"
+        - name: load_posts
+          in: query
+          description: >
+            Enable or disable fetching of posts from the search results.
+          schema:
+            default: true
+            type: boolean
+        - name: max_posts
+          in: query
+          description: >
+            Set limit for the number of posts that will be fetched for the search.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+        - name: load_comments
+          in: query
+          description: >
+            Enable or disable fetching of comments for the post.
+          schema:
+            default: false
+            type: boolean
+        - name: max_comments
+          in: query
+          description: >
+            Set limit for the number of comments that will be fetched for the post.
+
+             - Values < 25 will drastically increase the update process performance.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+        - name: load_replies
+          in: query
+          description: >
+            Enable or disable fetching of replies for the comments.
+          schema:
+            default: false
+            type: boolean
+        - $ref: "commons.yml#/components/parameters/CallbackURI"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateInterval"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateExpireAt"
+      responses:
+        "202":
+          $ref: "commons.yml#/components/responses/TaskCreated"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+    get:
+      summary: Status of the search task
+      tags:
+        - Tiktok search by music
+      parameters:
+        - $ref: "#/components/parameters/TiktokMusicID"
+        - $ref: "#/components/parameters/TiktokMusicTitle"
+      responses:
+        "200":
+          $ref: "commons.yml#/components/responses/TaskInfo"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_music_search:
+    get:
+      summary: Search task details
+      tags:
+        - Tiktok search by music
+      parameters:
+        - $ref: "#/components/parameters/TiktokMusicID"
+        - $ref: "#/components/parameters/TiktokMusicTitle"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    nullable: true
+                    $ref: "#/components/schemas/TiktokMusicSearch"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "404":
+          $ref: "commons.yml#/components/responses/NotFound"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_music_search_posts:
+    get:
+      summary: Cached posts from a music search
+      tags:
+        - Tiktok search by music
+      parameters:
+        - $ref: "#/components/parameters/TiktokMusicID"
+        - $ref: "#/components/parameters/TiktokMusicTitle"
+        - $ref: "commons.yml#/components/parameters/GetFilterFromDate"
+        - $ref: "commons.yml#/components/parameters/FilterToDate"
+        - $ref: "commons.yml#/components/parameters/FilterTextSearchQuery"
+        - $ref: "commons.yml#/components/parameters/OrderBy"
+        - $ref: "commons.yml#/components/parameters/PaginationCursor"
+        - $ref: "commons.yml#/components/parameters/PaginationMaxPageSize"
+        - $ref: "commons.yml#/components/parameters/FilterTextLanguage"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - items
+                      - page_info
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TiktokPost"
+                      page_info:
+                        $ref: "commons.yml#/components/schemas/PageInfo"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_post_search_update:
+    post:
+      summary: Post search update task
+      tags:
+        - Tiktok post search
+      parameters:
+        - name: keywords
+          in: query
+          description: >
+            List of keywords or a phrase to search
+          schema:
+            type: string
+            example: "fifa"
+        - name: load_posts
+          in: query
+          description: >
+            Enable or disable fetching of posts from the search results.
+          schema:
+            default: true
+            type: boolean
+        - name: max_posts
+          in: query
+          description: >
+            Set limit for the number of posts that will be fetched for the search.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+        - name: sort_type
+          in: query
+          description: >
+            Sort type for the posts.
+          schema:
+            default: relevance
+            type: string
+            enum:
+              - relevance
+              - like_count
+              - date_posted
+        - name: date_posted
+          in: query
+          description: >
+            Date posted for the posts.
+          schema:
+            default: all
+            type: string
+            enum:
+              - all
+              - past_day
+              - past_week
+              - past_month
+              - past_half_year
+        - name: load_comments
+          in: query
+          description: >
+            Enable or disable fetching of comments for the post.
+          schema:
+            default: false
+            type: boolean
+        - name: max_comments
+          in: query
+          description: >
+            Set limit for the number of comments that will be fetched for the post.
+
+             - Values < 25 will drastically increase the update process performance.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+        - name: load_replies
+          in: query
+          description: >
+            Enable or disable fetching of replies for the comments.
+          schema:
+            default: false
+            type: boolean
+        - name: upload_video_cover_url_s3
+          in: query
+          description: >
+            Upload video cover image to external data storage.
+
+
+            +1 credit per image.
+          schema:
+            default: false
+            type: boolean
+        - $ref: "commons.yml#/components/parameters/CallbackURI"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateInterval"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateExpireAt"
+      responses:
+        "202":
+          $ref: "commons.yml#/components/responses/TaskCreated"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+    get:
+      summary: Status of the search task
+      tags:
+        - Tiktok post search
+      parameters:
+        - name: keywords
+          in: query
+          description: >
+            List of keywords or a phrase to search
+          schema:
+            type: string
+            example: "fifa"
+        - name: sort_type
+          in: query
+          description: >
+            Sort type for the posts.
+          schema:
+            default: relevance
+            type: string
+            enum:
+              - relevance
+              - like_count
+              - date_posted
+        - name: date_posted
+          in: query
+          description: >
+            Date posted for the posts.
+          schema:
+            default: all
+            type: string
+            enum:
+              - all
+              - past_day
+              - past_week
+              - past_month
+              - past_half_year
+      responses:
+        "200":
+          $ref: "commons.yml#/components/responses/TaskInfo"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_post_search_posts:
+    get:
+      summary: Cached posts from a post search
+      tags:
+        - Tiktok post search
+      parameters:
+        - name: keywords
+          in: query
+          description: >
+            List of keywords or a phrase to search
+          schema:
+            type: string
+            example: "fifa"
+        - name: sort_type
+          in: query
+          description: >
+            Sort type for the posts.
+          schema:
+            default: relevance
+            type: string
+            enum:
+              - relevance
+              - like_count
+              - date_posted
+        - name: date_posted
+          in: query
+          description: >
+            Date posted for the posts.
+          schema:
+            default: all
+            type: string
+            enum:
+              - all
+              - past_day
+              - past_week
+              - past_month
+              - past_half_year
+        - $ref: "commons.yml#/components/parameters/GetFilterFromDate"
+        - $ref: "commons.yml#/components/parameters/FilterToDate"
+        - $ref: "commons.yml#/components/parameters/OrderBy"
+        - $ref: "commons.yml#/components/parameters/PaginationCursor"
+        - $ref: "commons.yml#/components/parameters/PaginationMaxPageSize"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - items
+                      - page_info
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TiktokPost"
+                      page_info:
+                        $ref: "commons.yml#/components/schemas/PageInfo"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_profile_search_update:
+    post:
+      summary: Profile search update task
+      tags:
+        - Tiktok profile search
+      parameters:
+        - name: keywords
+          in: query
+          description: >
+            List of keywords or a phrase to search
+          schema:
+            type: string
+            example: "elon"
+        - name: max_profiles
+          in: query
+          description: >
+            Set limit for the number of profiles that will be fetched for the search.
+          schema:
+            default: 100
+            minimum: 1
+            type: integer
+        - $ref: "commons.yml#/components/parameters/TiktokUploadAvatarToS3"
+        - $ref: "commons.yml#/components/parameters/CallbackURI"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateInterval"
+        - $ref: "commons.yml#/components/parameters/AutoUpdateExpireAt"
+      responses:
+        "202":
+          $ref: "commons.yml#/components/responses/TaskCreated"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+    get:
+      summary: Status of the search task
+      tags:
+        - Tiktok profile search
+      parameters:
+        - name: keywords
+          in: query
+          description: >
+            List of keywords or a phrase to search
+          schema:
+            type: string
+            example: "elon"
+      responses:
+        "200":
+          $ref: "commons.yml#/components/responses/TaskInfo"
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_profile_search_profiles:
+    get:
+      summary: Cached profiles from a profile search
+      tags:
+        - Tiktok profile search
+      parameters:
+        - name: keywords
+          in: query
+          description: >
+            List of keywords or a phrase to search
+          schema:
+            type: string
+            example: "elon"
+        - $ref: "commons.yml#/components/parameters/OrderByID"
+        - $ref: "commons.yml#/components/parameters/PaginationCursor"
+        - $ref: "commons.yml#/components/parameters/PaginationMaxPageSize"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: object
+                    required:
+                      - items
+                      - page_info
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/TiktokProfile"
+                      page_info:
+                        $ref: "commons.yml#/components/schemas/PageInfo"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_stats:
+    get:
+      summary: API usage stats
+      tags:
+        - Tiktok API credits usage
+      parameters:
+        - name: from_date
+          in: query
+          description: >
+            Calculate usage from this date.
+
+             - Timestamp value must be in ISO 8601 format (2007-04-06).
+          schema:
+            default: Beginning of the current month
+            type: string
+            format: date
+          example: "2021-02-12"
+        - name: to_date
+          in: query
+          description: >
+            Calculate usage to this date.
+
+             - Timestamp value must be in ISO 8601 format (2007-04-06).
+          schema:
+            default: Today
+            type: string
+            format: date
+          example: "2021-04-21"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - task_type
+                        - mentions_count
+                        - tasks_count
+                      properties:
+                        task_type:
+                          type: string
+                          enum:
+                            - post
+                            - profile
+                            - profile_with_posts
+                            - search_for_posts_by_hashtag
+                            - search_for_posts_by_music
+                            - search_for_profiles
+                        mentions_count:
+                          type: integer
+                        tasks_count:
+                          type: integer
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  tiktok_queues_size:
+    get:
+      summary: Tiktok queue size for current user
+      description: >
+        The endpoint provides information about the queues associated with the current user and their respective lenghts.
+        It allows users to retrieve the size of their queues, which can be useful for monitoring and managing queued items.
+      tags:
+        - Tiktok queues
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - name
+                        - size
+                        - max_size
+                      properties:
+                        name:
+                          type: string
+                        size:
+                          type: integer
+                        max_size:
+                          type: integer
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+  stats_usage:
+    get:
+      summary: API usage stats
+      tags:
+        - API usage
+      parameters:
+        - name: from_date
+          in: query
+          description: >
+            Calculate usage from this date.
+
+             - Timestamp value must be in ISO 8601 format (2007-04-06).
+          schema:
+            type: string
+            format: date
+          example: "2022-01-01"
+        - name: to_date
+          in: query
+          description: >
+            Calculate usage to this date.
+
+             - Timestamp value must be in ISO 8601 format (2007-04-06).
+          schema:
+            type: string
+            format: date
+          example: "2022-01-31"
+        - $ref: "commons.yml#/components/parameters/StatsUsageServices"
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - status
+                properties:
+                  data:
+                    $ref: "#/components/schemas/UsageStats"
+                  error:
+                    enum:
+                      - null
+                  status:
+                    type: string
+                    enum:
+                      - ok
+        "400":
+          $ref: "commons.yml#/components/responses/InvalidRequest"
+        "403":
+          $ref: "commons.yml#/components/responses/Unauthorized"
+        "429":
+          $ref: "commons.yml#/components/responses/RateLimitExceeded"
+        "503":
+          $ref: "commons.yml#/components/responses/InternalError"
+
+components:
+  schemas:
+    TiktokPostID:
+      type: string
+      format: int64 or str
+      example: "6984742325058604289"
+
+    TiktokCommentID:
+      type: string
+      format: int64
+      example: "17853906569406547"
+
+    TiktokProfileID:
+      type: string
+      format: int64
+      example: "6768298772725744642"
+
+    TiktokPostIDInt64:
+      type: integer
+      format: int64
+      example: 6984742325058604
+
+    TiktokProfileIDInt64:
+      type: integer
+      format: int64
+      example: 6768298772725744
+
+    TiktokProfileUsername:
+      type: string
+      example: "sssorn_chonnasorn"
+
+    TiktokProfileFullName:
+      type: string
+      example: "Sssorn Chonnasorn"
+
+    TiktokHashtagID:
+      type: string
+      example: "hellokitty"
+
+    TiktokMusicID:
+      type: string
+      format: int64
+      example: "6770164452730915590"
+
+    TiktokMusicTitle:
+      type: string
+      example: "I Get So Weak"
+
+    TiktokChallenge:
+      type: object
+      properties:
+        id:
+          type: string
+          format: int64
+        title:
+          type: string
+        description:
+          nullable: true
+          type: string
+        profile_url:
+          nullable: true
+          type: string
+          format: uri
+        cover_url:
+          nullable: true
+          type: string
+          format: uri
+        is_commerce:
+          type: boolean
+
+    TiktokDuet:
+      type: object
+      properties:
+        from_id:
+          $ref: "#/components/schemas/TiktokProfileID"
+
+    TiktokEffectSticker:
+      type: object
+      properties:
+        id:
+          type: string
+          format: int64
+        name:
+          type: string
+
+    TiktokMusic:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/TiktokMusicID"
+        title:
+          type: string
+        album:
+          nullable: true
+          type: string
+        author:
+          type: string
+        is_original:
+          type: boolean
+        play_url:
+          type: string
+          format: uri
+        cover_url:
+          type: string
+          format: uri
+        duration:
+          type: integer
+          format: seconds
+
+    TiktokVideo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: int64
+        height:
+          type: integer
+        width:
+          type: integer
+        duration:
+          type: integer
+          format: seconds
+        ratio:
+          type: string
+        bitrate:
+          type: integer
+        format:
+          type: string
+        quality:
+          type: string
+        cover_url:
+          type: string
+          format: uri
+        origin_cover_url:
+          type: string
+          format: uri
+        dynamic_cover_url:
+          type: string
+          format: uri
+        play_url:
+          type: string
+          format: uri
+        request:
+          type: string
+          description: >
+            The request field contains a cURL command for fetching video from TikTok,
+            incorporating necessary parameters and authentication details.
+
+    TiktokProfileMini:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/TiktokProfileID"
+        username:
+          $ref: "#/components/schemas/TiktokProfileUsername"
+        full_name:
+          $ref: "#/components/schemas/TiktokProfileFullName"
+
+    TiktokSticker:
+      type: object
+      properties:
+        type:
+          type: integer
+        text:
+          nullable: true
+          type: array
+          items:
+            type: string
+
+    TiktokProfile:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/TiktokProfileID"
+        username:
+          $ref: "#/components/schemas/TiktokProfileUsername"
+        full_name:
+          $ref: "#/components/schemas/TiktokProfileFullName"
+        username_modify_time:
+          nullable: true
+          type: string
+          format: date-time
+        full_name_modify_time:
+          nullable: true
+          type: string
+          format: date-time
+        created_time:
+          nullable: true
+          type: string
+          format: date-time
+        avatar_url:
+          type: string
+          format: uri
+        signature:
+          nullable: true
+          type: string
+        biography_link:
+          nullable: true
+          type: string
+          format: uri
+        region:
+          nullable: true
+          type: string
+        langs:
+          nullable: true
+          type: array
+          items:
+            type: string
+        is_verified:
+          nullable: true
+          type: boolean
+        is_private:
+          nullable: true
+          type: boolean
+        follower_count:
+          type: integer
+        following_count:
+          type: integer
+        friend_count:
+          type: integer
+        heart_count:
+          type: integer
+        video_count:
+          type: integer
+        digg_count:
+          type: integer
+        profile_avatar_url:
+          nullable: true
+          type: string
+          format: uri
+          example: "https://data365media.blob.core.windows.net/dev-media/tiktok/profiles/7010140047022769153/a98de66aaa520b962ffde155b9c4d16a.jpeg"
+        profile_screenshot_url:
+          type: string
+          format: uri
+          example: "https://data365media.blob.core.windows.net/dev-media/tiktok/profiles/6768298772725744642/page.png"
+
+    TiktokPost:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/TiktokPostID"
+        created_time:
+          type: string
+          format: date-time
+        timestamp:
+          nullable: true
+          type: integer
+          format: unix-timestamp
+          example: 1566645322
+
+        text:
+          nullable: true
+          type: string
+        lang:
+          nullable: true
+          type: string
+        mentioned_profiles:
+          nullable: true
+          type: array
+          items:
+            $ref: "#/components/schemas/TiktokProfileMini"
+        hashtags:
+          nullable: true
+          type: array
+          items:
+            type: string
+        images:
+          nullable: true
+          type: array
+          items:
+            type: string
+
+        music:
+          $ref: "#/components/schemas/TiktokMusic"
+        video:
+          $ref: "#/components/schemas/TiktokVideo"
+        duet:
+          nullable: true
+          $ref: "#/components/schemas/TiktokDuet"
+        challenges:
+          nullable: true
+          type: array
+          items:
+            $ref: "#/components/schemas/TiktokChallenge"
+        effect_stickers:
+          nullable: true
+          type: array
+          items:
+            $ref: "#/components/schemas/TiktokEffectSticker"
+        stickers:
+          nullable: true
+          type: array
+          items:
+            $ref: "#/components/schemas/TiktokSticker"
+
+        author:
+          $ref: "#/components/schemas/TiktokProfileMini"
+        author_id:
+          $ref: "#/components/schemas/TiktokProfileID"
+        author_username:
+          $ref: "#/components/schemas/TiktokProfileUsername"
+
+        is_activity_item:
+          type: boolean
+        is_original_item:
+          type: boolean
+        is_official_item:
+          type: boolean
+        is_for_friend:
+          type: boolean
+        is_duet_enabled:
+          type: boolean
+        is_stitch_enabled:
+          type: boolean
+        is_share_enabled:
+          type: boolean
+        is_ad:
+          type: boolean
+        digg_count:
+          type: integer
+        share_count:
+          type: integer
+        comment_count:
+          type: integer
+        play_count:
+          type: integer
+        save_count:
+          type: integer
+        mask_type:
+          type: integer
+        video_cover_url_s3:
+          nullable: true
+          type: string
+          format: url
+          example: "https://data365media.blob.core.windows.net/dev-media/tiktok/posts/6958669182422617345/0a65bd2f797a4867959d34aee2003595"
+        location_created:
+          nullable: true
+          type: string
+          example: "US"
+        point_of_interest:
+          $ref: "#/components/schemas/TiktokPointOfInterest"
+        subtitles:
+          nullable: true
+          type: array
+          items:
+            $ref: "#/components/schemas/Subtitle"
+
+    TiktokComment:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/TiktokCommentID"
+        parent_id:
+          $ref: "#/components/schemas/TiktokPostIDInt64"
+        author_id:
+          $ref: "#/components/schemas/TiktokProfileIDInt64"
+        author_username:
+          $ref: "#/components/schemas/TiktokProfileUsername"
+        author_full_name:
+          $ref: "#/components/schemas/TiktokProfileFullName"
+        created_time:
+          nullable: true
+          type: string
+          format: date-time
+        timestamp:
+          nullable: true
+          type: integer
+          format: unix-timestamp
+          example: 1566645322
+        text:
+          nullable: true
+          type: string
+          example: >
+            Mon message au peuple japonais. Au nom de l'amitié qui nous unit.
+            日本人へのメッセージ。 私たちを結びつける友情の名において。
+        text_lang:
+          nullable: true
+          type: string
+        digg_count:
+          nullable: true
+          type: integer
+          example: 101
+        reply_count:
+          nullable: true
+          type: integer
+          example: 20
+        is_author_digged:
+          nullable: true
+          type: boolean
+          example: false
+
+    TiktokHashtagSearch:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/TiktokHashtagID"
+
+        challenge:
+          $ref: "#/components/schemas/TiktokChallenge"
+
+        video_count:
+          type: integer
+        view_count:
+          type: integer
+
+    TiktokMusicSearch:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/TiktokMusicID"
+        title:
+          $ref: "#/components/schemas/TiktokMusicTitle"
+
+        music:
+          $ref: "#/components/schemas/TiktokMusic"
+        artist:
+          $ref: "#/components/schemas/TiktokProfileMini"
+
+        video_count:
+          type: integer
+
+    TiktokPointOfInterest:
+      type: object
+      properties:
+        id:
+          nullable: true
+          type: string
+        name:
+          nullable: true
+          type: string
+        url:
+          nullable: true
+          type: string
+          format: uri
+
+    Subtitle:
+      type: object
+      properties:
+        language:
+          type: string
+        url:
+          type: string
+          format: uri
+        expire:
+          nullable: true
+          type: integer
+          format: unix-timestamp
+
+    UsageStats:
+      type: object
+      properties:
+        date_range:
+          type: object
+          properties:
+            from:
+              type: string
+              format: date-time
+              example: "2024-01-01T00:00:00"
+            to:
+              type: string
+              format: date-time
+              example: "2024-02-01T00:00:00"
+        overall_summary:
+          type: object
+          properties:
+            total_credits:
+              type: integer
+              example: 262
+            total_tasks_finished:
+              type: integer
+              example: 39
+        services:
+          type: object
+          properties:
+            facebook:
+              type: object
+              properties:
+                summary:
+                  type: object
+                  properties:
+                    total_credits:
+                      type: integer
+                      example: 30
+                    total_tasks_finished:
+                      type: integer
+                      example: 5
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      credits:
+                        type: integer
+                        example: 30
+                      task_type:
+                        type: string
+                        example: post
+                      tasks_finished:
+                        type: integer
+                        example: 5
+            instagram:
+              type: object
+              properties:
+                summary:
+                  type: object
+                  properties:
+                    total_credits:
+                      type: integer
+                      example: 71
+                    total_tasks_finished:
+                      type: integer
+                      example: 7
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      credits:
+                        type: integer
+                        example: 71
+                      task_type:
+                        type: string
+                        example: post_with_comments
+                      tasks_finished:
+                        type: integer
+                        example: 7
+            linkedin:
+              type: object
+              properties:
+                summary:
+                  type: object
+                  properties:
+                    total_credits:
+                      type: integer
+                      example: 137
+                    total_tasks_finished:
+                      type: integer
+                      example: 3
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      credits:
+                        type: integer
+                        example: 137
+                      task_type:
+                        type: string
+                        example: post_search
+                      tasks_finished:
+                        type: integer
+                        example: 3
+            reddit:
+              type: object
+              properties:
+                summary:
+                  type: object
+                  properties:
+                    total_credits:
+                      type: integer
+                      example: 15
+                    total_tasks_finished:
+                      type: integer
+                      example: 15
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      credits:
+                        type: integer
+                        example: 15
+                      task_type:
+                        type: string
+                        example: post
+                      tasks_finished:
+                        type: integer
+                        example: 15
+            threads:
+              type: object
+              properties:
+                summary:
+                  type: object
+                  properties:
+                    total_credits:
+                      type: integer
+                      example: 15
+                    total_tasks_finished:
+                      type: integer
+                      example: 15
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      credits:
+                        type: integer
+                        example: 15
+                      task_type:
+                        type: string
+                        example: post
+                      tasks_finished:
+                        type: integer
+                        example: 15
+            tiktok:
+              type: object
+              properties:
+                summary:
+                  type: object
+                  properties:
+                    total_credits:
+                      type: integer
+                      example: 24
+                    total_tasks_finished:
+                      type: integer
+                      example: 24
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      credits:
+                        type: integer
+                        example: 24
+                      task_type:
+                        type: string
+                        example: post
+                      tasks_finished:
+                        type: integer
+                        example: 24
+            twitter:
+              type: object
+              properties:
+                summary:
+                  type: object
+                  properties:
+                    total_credits:
+                      type: integer
+                      example: 24
+                    total_tasks_finished:
+                      type: integer
+                      example: 24
+                tasks:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      credits:
+                        type: integer
+                        example: 24
+                      task_type:
+                        type: string
+                        example: post
+                      tasks_finished:
+                        type: integer
+                        example: 24
+
+  parameters:
+    TiktokPostID:
+      name: post_id
+      in: path
+      description: >
+        Internal Tiktok ID of the target post or shortcode from mobile app.
+      required: true
+      schema:
+        $ref: "#/components/schemas/TiktokPostID"
+
+    TiktokCommentID:
+      name: comment_id
+      in: path
+      description: >
+        Internal Tiktok ID of the target comment.
+      required: true
+      schema:
+        $ref: "#/components/schemas/TiktokCommentID"
+
+    TiktokProfileID:
+      name: profile_id
+      in: path
+      description: >
+        Internal Tiktok ID or username of the target profile without the @ prefix.
+      required: true
+      schema:
+        oneOf:
+          - $ref: "#/components/schemas/TiktokProfileID"
+          - $ref: "#/components/schemas/TiktokProfileUsername"
+
+    TiktokHashtagID:
+      name: hashtag_id
+      in: path
+      description: >
+        Hashtag without the # prefix.
+      required: true
+      schema:
+        $ref: "#/components/schemas/TiktokHashtagID"
+
+    TiktokMusicID:
+      name: music_id
+      in: path
+      description: >
+        Internal Tiktok ID of the target music.
+      required: true
+      schema:
+        $ref: "#/components/schemas/TiktokMusicID"
+
+    TiktokMusicTitle:
+      name: music_title
+      in: path
+      description: >
+        Internal Tiktok title of the target music.
+      required: true
+      schema:
+        $ref: "#/components/schemas/TiktokMusicTitle"

@@ -1,0 +1,597 @@
+components:
+  schemas:
+    PageInfo:
+      type: object
+      required:
+        - cursor
+        - has_next_page
+      properties:
+        cursor:
+          nullable: true
+          type: string
+          example: "MjY3NDI2NjQ0ODMxNzk4"
+        has_next_page:
+          type: boolean
+
+    TaskId:
+      type: string
+      example: "MTAxNTk4OTM1Nzc3MDA3OTg"
+
+    TaskInfo:
+      type: object
+      required:
+        - id
+        - type
+        - status
+        - period
+        - created_at
+        - expire_at
+      properties:
+        id:
+          $ref: "#/components/schemas/TaskId"
+        type:
+          type: string
+          example: "tiktok_post"
+        status:
+          type: string
+          enum:
+            - created
+            - pending
+            - finished
+            - fail
+            - canceled
+            - unknown
+        period:
+          type: integer
+          format: seconds
+          example: 3600
+        created_at:
+          type: string
+          format: date-time
+          example: "2021-04-06T21:42:12"
+        expire_at:
+          nullable: true
+          type: string
+          format: date-time
+          example: "2021-04-06T21:42:12"
+
+  parameters:
+    CallbackURI:
+      name: callback_url
+      in: query
+      description: >
+        Webhook URL to receive loaded data.
+
+         - API will make a POST request to this URL when the update process finished.
+         - The request body will contain status and error info along with loaded data and pagination cursors.
+         - This parameter is useful if you want to avoid API polling while waiting for updated data.
+      schema:
+        default: null
+        type: string
+        format: uri
+      example: "https://webhook.site/d63fd0b0-efb3-4138-9aff-3525f4a3f0fb"
+
+    AutoUpdateInterval:
+      name: auto_update_interval
+      in: query
+      description: >
+        Create an auto update task. Update task for the item will be issued every `auto_update_interval` seconds.
+
+         - API will make a POST request to the callback URL every time the update process has finished.
+         - This parameter is useful if you want to need to monitor items, but don't want to create update tasks manually.
+         - You can retrieve or cancel auto update tasks with `/tasks` endpoints.
+      schema:
+        default: null
+        type: integer
+        format: seconds
+      example: 3600
+
+    AutoUpdateExpireAt:
+      name: auto_update_expire_at
+      in: query
+      description: >
+        Auto update task will be canceled after this date.
+
+          - The timestamp must be provided either in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
+          format or as a **negative** integer value.
+          - If the value is ISO 8601 (2007-04-06T21:42), it is treated as an absolute point in time.
+          - If the value is a **negative** integer, it is interpreted as a duration
+          in seconds subtracted from the current UTC time.
+
+      schema:
+        default: null
+        type: string
+        format: date-time
+      examples:
+        datetime:
+          value: "2021-04-06T21:42:12"
+          summary: Date and time
+        date:
+          value: "2021-04-06"
+          summary: Date only (time will be set to 00:00)
+        integer:
+          value: -86400
+          summary: Set as the current UTC time(now()) - 86400(1 day)
+
+    PostFilterFromDate:
+      name: from_date
+      in: query
+      description: >
+        Filter items by date (lower bound).
+
+        - Timestamp value must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+        - Items are collected from newest to oldest and the update process will stop once the specified from_date is reached.
+        - If used in an **auto update task**, the from_date value will automatically shift forward
+          by the length of the update interval for each subsequent run.
+
+          *Example: if you schedule an auto update task with from_date=2021-01-01, the first run will refresh posts until 01.01.2021,
+          on the next day the second run until 02.01.2021 and so on.*
+      schema:
+        default: null
+        type: string
+        format: "ISO 8601"
+      examples:
+        datetime:
+          value: "2021-04-06T21:42:12"
+          summary: Date and time
+        date:
+          value: "2021-04-06"
+          summary: Date only (time will be set to 00:00)
+
+    GetFilterFromDate:
+      name: from_date
+      in: query
+      description: >
+        Filter items by date (lower bound).
+
+         - All items created before this date will be removed from the response.
+         - Timestamp value must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+         - Supports integer values to calculate relative datetime from UTC now()
+      schema:
+        default: null
+        type: string
+        format: "ISO 8601 or integer"
+      examples:
+        datetime:
+          value: "2021-04-06T21:42:12"
+          summary: Date and time
+        date:
+          value: "2021-04-06"
+          summary: Date only (time will be set to 00:00)
+        int:
+          value: "-86400"
+          summary: Negative integer (datetime will be set to `now()-24h`)
+
+    FilterToDate:
+      name: to_date
+      in: query
+      description: >
+        Filter items by date (upper bound).
+
+         - All items created after and at this date will be removed from the response.
+         - Timestamp value must be in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
+         - Supports integer values to calculate relative datetime from UTC now()
+      schema:
+        default: null
+        type: string
+        format: "ISO 8601 or integer"
+      examples:
+        datetime:
+          value: "2021-04-06T21:42:12"
+          summary: Date and time
+        date:
+          value: "2021-04-06"
+          summary: Date only (time will be set to 00:00)
+        int:
+          value: "-86400"
+          summary: Negative integer (datetime will be set to `now()-24h`)
+
+    FilterTextLanguage:
+      name: lang
+      in: query
+      description: >
+        Filter items by text language.
+
+         - Language must be specified as two-letter [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) code.
+
+         - Supports multiple comma-separated values.
+      examples:
+        single:
+          value: "en"
+          summary: "Single language filter"
+        multiple:
+          value: "en,fr"
+          summary: "Multiple languages filter"
+      schema:
+        default: null
+        type: string
+        format: "ISO 639-1"
+
+    FilterLocationName:
+      name: location_name
+      in: query
+      description: >
+        Filter items by the location name.
+
+         - A query can contain quotes, logical operators, parenthesis and stopwords.
+      schema:
+        default: null
+        type: string
+        format: search query
+      examples:
+        complex:
+          value: '("New York" or NY) -park'
+          summary: Complex filtering
+        stopwords:
+          value: '-"New York" -Boston'
+          summary: Remove items with "New York" or "Boston" in the location name
+        words:
+          value: "Boston park"
+          summary: Show only items with "Boston" and "park" in the location name
+
+    FilterTextSearchQuery:
+      name: query
+      in: query
+      description: >
+        Filter items by the text search query.
+
+         - A query can contain quotes, logical operator OR and stopwords.
+      schema:
+        default: null
+        type: string
+        format: search query
+      examples:
+        complex:
+          value: '"microsoft windows" or linux -apple'
+          summary: Complex filtering
+        stopwords:
+          value: '-"microsoft windows" -apple'
+          summary: Remove posts with fragment "microsoft windows" or "apple" (and "apples")
+        words:
+          value: "microsoft windows"
+          summary: Show only posts with both "microsoft" and "windows" ("microsoft windows", "window and microsoft" etc)
+
+    OrderBy:
+      name: order_by
+      in: query
+      description: >
+        Defines a field to order items by and sort direction.
+      schema:
+        type: string
+        enum:
+          - id_asc
+          - id_desc
+          - date_asc
+          - date_desc
+
+    OrderByID:
+      name: order_by
+      in: query
+      description: >
+        Defines a field to order items by and sort direction.
+      schema:
+        type: string
+        enum:
+          - id_asc
+          - id_desc
+
+    PaginationMaxPageSize:
+      name: max_page_size
+      in: query
+      description: >
+        Defines the maximal number of items on every results page.
+
+         - If the value is greater than **maximum**, the system will automatically set it to **maximum**.
+         - The parameter does not affect the number of items fetched during the updating process.
+      schema:
+        default: 25
+        minimum: 1
+        maximum: 500
+        type: integer
+      example: 50
+
+    PaginationCursor:
+      name: cursor
+      in: query
+      description: >
+        Pagination cursor for the next page.
+
+         - Can be retrieved from the previous page (`data.page_info.cursor`).
+      schema:
+        type: string
+      example: "MjY3NDI2NjQ0ODMxNzk4"
+
+    TaskId:
+      name: task_id
+      in: path
+      description: |
+        ID of the target task.
+        Only tasks in the queue - `created` status - can be canceled.
+        See more in [API limitations](#section/API-limitations)
+      required: true
+      schema:
+        $ref: "#/components/schemas/TaskId"
+
+    StatsUsageServices:
+      name: services
+      in: query
+      description: >
+        Filter usage stats by services.
+
+          - Multiple values can be provided as a comma-separated list.
+      schema:
+        default: "facebook,instagram,reddit,threads,tiktok,twitter"
+        type: string
+        example: "instagram,facebook"
+
+    TiktokUploadAvatarToS3:
+      name: upload_avatar_to_s3
+      in: query
+      description: >
+        Upload profile avatar to external data storage.
+
+
+        +1 credit per profile.
+      schema:
+        default: false
+        type: boolean
+
+  responses:
+    TaskCreated:
+      description: Task has been created
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              data:
+                type: object
+                required:
+                  - task_id
+                properties:
+                  task_id:
+                    $ref: "#/components/schemas/TaskId"
+              error:
+                enum:
+                  - null
+              status:
+                type: string
+                enum:
+                  - accepted
+
+    TaskCanceled:
+      description: Task has been canceled
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - status
+            properties:
+              data:
+                enum:
+                  - null
+              error:
+                enum:
+                  - null
+              status:
+                type: string
+                enum:
+                  - ok
+
+    TaskInfo:
+      description: Task info
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+              - status
+            properties:
+              data:
+                type: object
+                required:
+                  - status
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - created
+                      - pending
+                      - finished
+                      - fail
+                      - canceled
+                      - unknown
+              error:
+                enum:
+                  - null
+              status:
+                type: string
+                enum:
+                  - ok
+
+    NotFound:
+      description: Item not found in the cache
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - error
+              - status
+            properties:
+              data:
+                enum:
+                  - null
+              error:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    enum:
+                      - NotFoundError
+                  message:
+                    type: string
+                  target:
+                    nullable: true
+                    type: string
+                  value:
+                    nullable: true
+                    type: string
+              status:
+                type: string
+                enum:
+                  - fail
+
+    InvalidRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - error
+              - status
+            properties:
+              data:
+                enum:
+                  - null
+              error:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    enum:
+                      - InvalidRequestError
+                      - InvalidId
+                      - InvalidSorting
+                      - InvalidRequestParameter
+                  message:
+                    type: string
+                  target:
+                    nullable: true
+                    type: string
+                  value:
+                    nullable: true
+                    type: string
+              status:
+                type: string
+                enum:
+                  - fail
+
+    Unauthorized:
+      description: Unauthorized request. Access token is missing or invalid
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - error
+              - status
+            properties:
+              data:
+                enum:
+                  - null
+              error:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    enum:
+                      - AuthorizationFailed
+                  message:
+                    type: string
+                  target:
+                    nullable: true
+                    type: string
+                  value:
+                    nullable: true
+                    type: string
+              status:
+                type: string
+                enum:
+                  - fail
+
+    RateLimitExceeded:
+      description: You have exceeded the rate limit
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - error
+              - status
+            properties:
+              data:
+                enum:
+                  - null
+              error:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    enum:
+                      - RateLimitExceeded
+                  message:
+                    type: string
+                  target:
+                    nullable: true
+                    type: string
+                  value:
+                    nullable: true
+                    type: string
+              status:
+                type: string
+                enum:
+                  - fail
+
+    InternalError:
+      description: Internal error
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - error
+              - status
+            properties:
+              data:
+                enum:
+                  - null
+              error:
+                type: object
+                required:
+                  - code
+                  - message
+                properties:
+                  code:
+                    type: string
+                    enum:
+                      - InternalError
+                  message:
+                    type: string
+                  target:
+                    nullable: true
+                    type: string
+                  value:
+                    nullable: true
+                    type: string
+              status:
+                type: string
+                enum:
+                  - fail

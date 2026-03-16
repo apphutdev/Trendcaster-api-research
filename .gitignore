@@ -1,0 +1,4 @@
+.env
+results/
+videos/
+*.mp4
