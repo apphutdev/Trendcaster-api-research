@@ -758,7 +758,7 @@
       <tr><td style="color:var(--indigo)">Anthropic</td><td>Claude Haiku 4.5</td><td class="r mono">$1.00</td><td class="r mono">$5.00</td><td class="r mono">$0.07</td><td class="r mono">$2.80</td><td class="r mono">$4.20</td></tr>
       <tr><td style="color:var(--blue)">Google</td><td>Gemini 2.5 Pro</td><td class="r mono">$1.25</td><td class="r mono">$10.00</td><td class="r mono">$0.13</td><td class="r mono">$5.00</td><td class="r mono">$7.50</td></tr>
       <tr><td style="color:var(--blue)">Google</td><td>Gemini 2.5 Flash</td><td class="r mono">$0.30</td><td class="r mono">$2.50</td><td class="r mono">$0.03</td><td class="r mono">$1.24</td><td class="r mono">$1.86</td></tr>
-      <tr><td style="color:var(--blue)">Google</td><td>Gemini 2.0 Flash</td><td class="r mono">$0.10</td><td class="r mono">$0.40</td><td class="r mono">$0.006</td><td class="r mono">$0.24</td><td class="r mono">$0.36</td></tr>
+      <tr style="opacity:0.5;text-decoration:line-through"><td style="color:var(--blue)">Google</td><td>Gemini 2.0 Flash <span style="color:var(--red);font-size:10px;text-decoration:none">&nbsp;DEPRECATED</span></td><td class="r mono">$0.10</td><td class="r mono">$0.40</td><td class="r mono">$0.006</td><td class="r mono">$0.24</td><td class="r mono">$0.36</td></tr>
       <tr><td style="color:var(--green)">OpenAI</td><td>GPT-4.1</td><td class="r mono">$2.00</td><td class="r mono">$8.00</td><td class="r mono">$0.12</td><td class="r mono">$4.80</td><td class="r mono">$7.20</td></tr>
       <tr><td style="color:var(--green)">OpenAI</td><td>GPT-4o</td><td class="r mono">$2.50</td><td class="r mono">$10.00</td><td class="r mono">$0.15</td><td class="r mono">$6.00</td><td class="r mono">$9.00</td></tr>
       <tr><td style="color:var(--green)">OpenAI</td><td>GPT-4o Mini</td><td class="r mono">$0.15</td><td class="r mono">$0.60</td><td class="r mono">$0.009</td><td class="r mono">$0.36</td><td class="r mono">$0.54</td></tr>
@@ -790,7 +790,7 @@
 <!-- Gemini pipeline callout -->
 <div class="callout green reveal">
   <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-  <div><strong>Cheapest cloud path:</strong> Gemini 2.0 Flash at $0.24 / 2,000 videos is the lowest-cost option. Gemini 2.5 Flash at $1.24 / 2K offers better quality at still 6.8x cheaper than Haiku. Use 2.0 Flash for first-pass, escalate ambiguous results to 2.5 Flash or Pro.</div>
+  <div><strong>Cheapest cloud path:</strong> Gemini 2.5 Flash at $0.03/2K captions is the lowest-cost paid option &mdash; and its free tier (250 req/day) covers most weekly analysis entirely. Gemini 2.5 Pro also has a free tier (100 req/day). <em>Note: Gemini 2.0 Flash deprecated March 2026, shutdown Sept 2026.</em></div>
 </div>
 
 <!-- Video Transcription + Analysis -->
@@ -807,8 +807,7 @@
       <tr><td>Whisper + Claude Sonnet 4.6</td><td class="r mono">$0.013</td><td class="r mono">$0.63</td><td class="r mono">$25.00</td></tr>
       <tr><td>Whisper + Claude Haiku 4.5</td><td class="r mono">$0.006</td><td class="r mono">$0.28</td><td class="r mono">$11.00</td></tr>
       <tr><td>Whisper + Gemini 2.5 Pro</td><td class="r mono">$0.008</td><td class="r mono">$0.41</td><td class="r mono">$16.50</td></tr>
-      <tr><td>Whisper + Gemini 2.5 Flash</td><td class="r mono">$0.004</td><td class="r mono">$0.18</td><td class="r mono">$7.10</td></tr>
-      <tr class="row-total"><td>Whisper + Gemini 2.0 Flash</td><td class="r mono c-green">$0.002</td><td class="r mono c-green">$0.12</td><td class="r mono c-green">$4.60</td></tr>
+      <tr class="row-total"><td>Whisper + Gemini 2.5 Flash <span style="font-size:10px;color:var(--green)">&nbsp;BEST VALUE</span></td><td class="r mono c-green">$0.004</td><td class="r mono c-green">$0.18</td><td class="r mono c-green">$7.10</td></tr>
     </tbody>
   </table>
 </div>
@@ -910,14 +909,14 @@
         <td>Gemini 2.5 Flash <em>or</em> Local (Mistral 3.1)</td>
         <td>Captions + hashtags</td>
         <td>Category, sentiment, trend score</td>
-        <td class="r mono c-green">$1.24 <em>or $0</em></td>
+        <td class="r mono c-green">$1.24 <em>or ~$0.01 local</em></td>
       </tr>
       <tr>
         <td><strong>3. Transcribe</strong></td>
         <td>Whisper API <em>or</em> whisper.cpp local</td>
         <td>Top 200 videos (filtered)</td>
         <td>Full transcripts</td>
-        <td class="r mono">$0.40 <em>or $0</em></td>
+        <td class="r mono">$0.40 <em>or ~$0.01 local</em></td>
       </tr>
       <tr>
         <td><strong>4. Deep analyse</strong></td>
@@ -995,6 +994,92 @@
   </div>
 </div>
 
+<!-- ━━ MONTHLY COST ESTIMATE ━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="section-head reveal">
+  <h2>Real Monthly Cost &mdash; Single Niche, Weekly Top 5</h2>
+  <div class="line"></div>
+</div>
+
+<div class="card reveal" style="padding:16px 20px">
+  <p style="color:var(--text-2);margin-bottom:14px">What does it actually cost to run a weekly trend analysis for <strong>plastic surgery in the USA</strong>, delivering the top 5 trends each week?</p>
+
+  <div class="sub-label">Weekly Pipeline Breakdown</div>
+  <table>
+    <thead><tr><th>Stage</th><th>Action</th><th class="r">Volume</th><th class="r">Credits</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="3" style="vertical-align:top;font-weight:600;color:var(--cyan)">1. Discover</td><td>Keyword searches &times; 50 posts each<br><span style="font-size:11px;color:var(--dim)">"rhinoplasty", "BBL", "lip filler", "botox", "facelift", "tummy tuck", "mommy makeover", "breast augmentation", "plastic surgery", "cosmetic surgery"</span></td><td class="r mono">10 searches</td><td class="r mono">570</td></tr>
+      <tr><td>Hashtag searches &times; 50 posts each<br><span style="font-size:11px;color:var(--dim)">#plasticsurgery, #rhinoplasty, #bbl, #botox, #lipfiller</span></td><td class="r mono">5 searches</td><td class="r mono">285</td></tr>
+      <tr><td>Profile searches &times; 20 profiles each</td><td class="r mono">3 searches</td><td class="r mono">81</td></tr>
+      <tr><td style="font-weight:600;color:var(--blue)">2. Deep dive</td><td>Fetch top creator profiles</td><td class="r mono">10 profiles</td><td class="r mono">90</td></tr>
+      <tr class="row-total"><td colspan="2"><strong>Weekly total</strong></td><td></td><td class="r mono"><strong>1,026</strong></td></tr>
+      <tr class="row-total"><td colspan="2"><strong>Monthly total (4 weeks)</strong></td><td></td><td class="r mono"><strong>4,104</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="sub-label" style="margin-top:20px">LLM Analysis Cost per Week</div>
+  <p style="font-size:13px;color:var(--text-2);margin-bottom:8px">~750 videos collected &rarr; ~200 tokens per caption &rarr; batched in groups of 25 = 30 LLM calls/week</p>
+  <table>
+    <thead><tr><th>Model</th><th class="r">Input tokens</th><th class="r">Output tokens</th><th class="r">Weekly cost</th><th class="r">Monthly cost</th></tr></thead>
+    <tbody>
+      <tr><td>Gemini 2.5 Flash <span class="tag" style="font-size:9px;margin-left:4px">FREE TIER</span></td><td class="r mono">165K</td><td class="r mono">24K</td><td class="r mono c-green">$0.00</td><td class="r mono c-green">$0.00</td></tr>
+      <tr><td>Gemini 2.5 Flash (paid)</td><td class="r mono">165K</td><td class="r mono">24K</td><td class="r mono">$0.11</td><td class="r mono">$0.44</td></tr>
+      <tr><td>Gemini 2.5 Pro <span class="tag" style="font-size:9px;margin-left:4px">FREE TIER</span></td><td class="r mono">165K</td><td class="r mono">24K</td><td class="r mono c-green">$0.00</td><td class="r mono c-green">$0.00</td></tr>
+      <tr><td>Claude Haiku 4.5</td><td class="r mono">165K</td><td class="r mono">24K</td><td class="r mono">$0.29</td><td class="r mono">$1.14</td></tr>
+      <tr><td>GPT-4o Mini</td><td class="r mono">165K</td><td class="r mono">24K</td><td class="r mono">$0.04</td><td class="r mono">$0.15</td></tr>
+      <tr><td>Claude Sonnet 4.6 (top 10% only)</td><td class="r mono">16.5K</td><td class="r mono">2.4K</td><td class="r mono">$0.09</td><td class="r mono">$0.34</td></tr>
+      <tr><td>Local LLM (Mistral 3.1 / Qwen 2.5)</td><td class="r mono">165K</td><td class="r mono">24K</td><td class="r mono c-green">$0*</td><td class="r mono c-green">$1-16*</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:11px;color:var(--dim);margin-top:4px">* Local LLM = electricity only. See Local LLM Hardware section for breakdown.</p>
+
+  <div class="sub-label" style="margin-top:20px">Total Monthly Cost by Strategy</div>
+  <div class="grid-3" style="gap:14px">
+    <div class="tier">
+      <h5 style="color:var(--green)">Zero-Cost Path</h5>
+      <p>Gemini free tier + hashtag pre-filter</p>
+      <ul>
+        <li>Data365 <span class="mono">4,104 credits</span></li>
+        <li>LLM (Gemini 2.5 Flash free) <span class="mono c-green">$0.00</span></li>
+        <li>Data365 plan cost <span class="mono">$325/mo*</span></li>
+        <li style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><strong>Total</strong> <span class="mono c-green"><strong>~$325/mo</strong></span></li>
+      </ul>
+      <p style="font-size:11px;color:var(--dim)">* Uses &lt;1% of Basic plan's 500K credits. The subscription floor is your real cost, not usage.</p>
+    </div>
+    <div class="tier">
+      <h5 style="color:var(--blue)">Budget Hybrid</h5>
+      <p>Local classify + cloud deep-dive</p>
+      <ul>
+        <li>Data365 <span class="mono">4,104 credits</span></li>
+        <li>Local LLM (classify all) <span class="mono c-cyan">$3-8/mo</span></li>
+        <li>Sonnet 4.6 (top 10% deep) <span class="mono">$0.34/mo</span></li>
+        <li>Data365 plan cost <span class="mono">$325/mo</span></li>
+        <li style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><strong>Total</strong> <span class="mono"><strong>~$328-333/mo</strong></span></li>
+      </ul>
+    </div>
+    <div class="tier">
+      <h5 style="color:var(--amber)">Full Cloud</h5>
+      <p>No local hardware needed</p>
+      <ul>
+        <li>Data365 <span class="mono">4,104 credits</span></li>
+        <li>Gemini 2.5 Flash (classify) <span class="mono">$0.44/mo</span></li>
+        <li>Sonnet 4.6 (deep analysis) <span class="mono">$0.34/mo</span></li>
+        <li>Data365 plan cost <span class="mono">$325/mo</span></li>
+        <li style="border-top:1px solid var(--border);padding-top:6px;margin-top:4px"><strong>Total</strong> <span class="mono"><strong>~$326/mo</strong></span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout amber" style="margin-top:14px">
+    <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <div><strong>The elephant in the room:</strong> Data365's Basic plan at &euro;300/month ($325) is the cost floor. A single weekly niche analysis uses &lt;1% of the 500K credit allowance. The LLM cost is negligible ($0-1/month with free tiers). If you plan to track <strong>only 1 niche weekly</strong>, the platform subscription is 99% of your cost. Consider: (a) tracking multiple niches to utilise your credits, (b) negotiating a smaller plan, or (c) running the daily tracking scenario to maximise value from the subscription.</div>
+  </div>
+
+  <div class="callout green" style="margin-top:10px">
+    <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+    <div><strong>Getting your money's worth:</strong> At 4,104 credits/week for one niche, a Basic plan supports <strong>~23 niches simultaneously</strong> at weekly cadence, or <strong>~29 hours of daily tracking</strong> per month. Running 5 niches in parallel (plastic surgery, dermal fillers, med spa, weight loss, dental aesthetics) still uses only 4% of your credits.</div>
+  </div>
+</div>
+
 <!-- ━━ RECOMMENDATIONS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <div class="section-head reveal">
   <h2>Recommendations</h2>
@@ -1008,7 +1093,7 @@
       <tr><td class="mono c-blue">1</td><td>Start with the <strong>Daily Tracking</strong> scenario (20 + 5 searches)</td><td>Best coverage-to-cost ratio at 2,425 credits/hr</td></tr>
       <tr><td class="mono c-blue">2</td><td>Filter by <code style="color:var(--cyan);background:var(--surface-2);padding:2px 6px;border-radius:3px;font-size:11px">past_week</code> to surface active trends</td><td>Avoids stale historical posts; focuses on current signals</td></tr>
       <tr><td class="mono c-blue">3</td><td>Skip comments initially &mdash; add only for deep-dive</td><td>Saves 500&ndash;2,200 credits/hr on the collection side</td></tr>
-      <tr><td class="mono c-blue">4</td><td>Use <strong>Gemini 2.0 Flash</strong> as first-pass classifier (free tier available)</td><td>$0.24 per 2K videos &mdash; 35x cheaper than Sonnet; free for prototyping</td></tr>
+      <tr><td class="mono c-blue">4</td><td>Use <strong>Gemini 2.5 Flash</strong> as first-pass classifier (free tier: 250 req/day)</td><td>$0.03 per 2K videos &mdash; free tier covers weekly analysis entirely</td></tr>
       <tr><td class="mono c-blue">5</td><td>Run <strong>Mistral Small 3.1 locally</strong> for zero-cost classification</td><td>Eliminates recurring API cost; 16 GB VRAM sufficient</td></tr>
       <tr><td class="mono c-blue">6</td><td>Escalate only top 10% to <strong>Claude Sonnet / Gemini Pro</strong></td><td>Deep analysis on 200 videos instead of 2,000 &mdash; 10x savings</td></tr>
       <tr><td class="mono c-blue">7</td><td>Run searches concurrently &mdash; API supports 100K queued tasks</td><td>All 25 searches complete in ~3 min vs 75 min sequential</td></tr>
@@ -1052,7 +1137,7 @@
       <tr>
         <td class="mono c-green">1</td>
         <td><strong>Gemini free tier for classification</strong></td>
-        <td>All Gemini models offer free rate-limited access. Process captions through Gemini 2.0 Flash free tier during off-peak hours</td>
+        <td>Gemini 2.5 Flash (250 req/day free) and 2.5 Pro (100 req/day free). Process captions through free tier during off-peak hours. <em>Note: Gemini 2.0 Flash deprecated March 2026</em></td>
         <td class="c-green">100% off LLM cost</td>
       </tr>
       <tr>
@@ -1183,10 +1268,10 @@ new Chart(document.getElementById('c2'), {
 new Chart(document.getElementById('c3'), {
   type: 'bar',
   data: {
-    labels: ['Gemini 2.0 Flash', 'GPT-4o Mini', 'Gemini 2.5 Flash', 'Haiku 4.5', 'GPT-4.1', 'Gemini 2.5 Pro', 'GPT-4o', 'Sonnet 4.6'],
+    labels: ['GPT-4o Mini', 'Gemini 2.5 Flash', 'Haiku 4.5', 'GPT-4.1', 'Gemini 2.5 Pro', 'GPT-4o', 'Sonnet 4.6'],
     datasets: [{
-      data: [0.24, 0.36, 1.24, 2.80, 4.80, 5.00, 6.00, 8.40],
-      backgroundColor: ['#22C55E','#22C55E','#22D3EE','#818CF8','#22D3EE','#3B82F6','#D97706','#EF4444'],
+      data: [0.36, 1.24, 2.80, 4.80, 5.00, 6.00, 8.40],
+      backgroundColor: ['#22C55E','#22D3EE','#818CF8','#22D3EE','#3B82F6','#D97706','#EF4444'],
       borderRadius: 4,
       barPercentage: 0.6,
     }]
@@ -1228,16 +1313,16 @@ new Chart(document.getElementById('c4'), {
 new Chart(document.getElementById('c5'), {
   type: 'bar',
   data: {
-    labels: ['Sonnet 4.6', 'Gemini 2.5 Pro', 'Haiku 4.5', 'Gemini 2.5 Flash', 'Gemini 2.0 Flash', 'Mistral 3.1 (local)', 'Phi-4 (local)'],
+    labels: ['Sonnet 4.6', 'Gemini 2.5 Pro', 'Haiku 4.5', 'Gemini 2.5 Flash', 'Mistral 3.1 (local)', 'Phi-4 (local)'],
     datasets: [{
       label: 'Caption analysis',
-      data: [8.40, 5.00, 2.80, 1.24, 0.24, 0, 0],
+      data: [8.40, 5.00, 2.80, 1.24, 0, 0],
       backgroundColor: '#3B82F6',
       borderRadius: 4,
       barPercentage: 0.5,
     },{
       label: '+ Transcription',
-      data: [25.00, 16.50, 11.00, 7.10, 4.60, 0, 0],
+      data: [25.00, 16.50, 11.00, 7.10, 0, 0],
       backgroundColor: '#818CF8',
       borderRadius: 4,
       barPercentage: 0.5,
@@ -1247,7 +1332,7 @@ new Chart(document.getElementById('c5'), {
     indexAxis: 'y',
     plugins: {
       legend: { position: 'bottom', labels: { boxWidth: 10, padding: 16 } },
-      tooltip: { callbacks: { label: c => c.raw === 0 ? '$0 (free)' : '$' + c.raw.toFixed(2) } }
+      tooltip: { callbacks: { label: c => c.raw === 0 ? '~$0 (electricity only)' : '$' + c.raw.toFixed(2) } }
     },
     scales: {
       x: { beginAtZero: true, grid, ticks: { font: { family: M, size: 11 }, callback: v => '$'+v } },
