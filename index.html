@@ -746,7 +746,7 @@
 
 <!-- Cloud LLMs -->
 <div class="sub-label">Cloud API Models &mdash; Caption / Metadata Analysis</div>
-<p style="font-size:12px;color:var(--muted);margin-bottom:12px">~400 input tokens (caption + metadata) + ~200 output tokens (classification + summary) per video</p>
+<p style="font-size:12px;color:var(--muted);margin-bottom:12px">~400 input tokens (caption + metadata) + ~200 output tokens (classification + summary) per video. Prices verified March 2026.</p>
 
 <div class="card reveal" style="padding:16px 20px">
   <table>
@@ -754,15 +754,21 @@
       <tr><th>Provider</th><th>Model</th><th class="r">Input $/1M</th><th class="r">Output $/1M</th><th class="r">50 videos</th><th class="r">2,000 videos</th><th class="r">3,000 videos</th></tr>
     </thead>
     <tbody>
-      <tr><td style="color:var(--indigo)">Anthropic</td><td>Claude Sonnet 4.6</td><td class="r mono">$3.00</td><td class="r mono">$15.00</td><td class="r mono">$0.23</td><td class="r mono">$9.00</td><td class="r mono">$13.50</td></tr>
-      <tr><td style="color:var(--indigo)">Anthropic</td><td>Claude Haiku 4.5</td><td class="r mono">$0.80</td><td class="r mono">$4.00</td><td class="r mono">$0.06</td><td class="r mono">$2.40</td><td class="r mono">$3.60</td></tr>
+      <tr><td style="color:var(--indigo)">Anthropic</td><td>Claude Sonnet 4.6</td><td class="r mono">$3.00</td><td class="r mono">$15.00</td><td class="r mono">$0.21</td><td class="r mono">$8.40</td><td class="r mono">$12.60</td></tr>
+      <tr><td style="color:var(--indigo)">Anthropic</td><td>Claude Haiku 4.5</td><td class="r mono">$1.00</td><td class="r mono">$5.00</td><td class="r mono">$0.07</td><td class="r mono">$2.80</td><td class="r mono">$4.20</td></tr>
       <tr><td style="color:var(--blue)">Google</td><td>Gemini 2.5 Pro</td><td class="r mono">$1.25</td><td class="r mono">$10.00</td><td class="r mono">$0.13</td><td class="r mono">$5.00</td><td class="r mono">$7.50</td></tr>
-      <tr><td style="color:var(--blue)">Google</td><td>Gemini 2.5 Flash</td><td class="r mono">$0.15</td><td class="r mono">$0.60</td><td class="r mono">$0.01</td><td class="r mono">$0.36</td><td class="r mono">$0.54</td></tr>
-      <tr><td style="color:var(--blue)">Google</td><td>Gemini 2.0 Flash</td><td class="r mono">$0.10</td><td class="r mono">$0.40</td><td class="r mono">$0.01</td><td class="r mono">$0.24</td><td class="r mono">$0.36</td></tr>
-      <tr><td style="color:var(--green)">OpenAI</td><td>GPT-4o</td><td class="r mono">$2.50</td><td class="r mono">$10.00</td><td class="r mono">$0.19</td><td class="r mono">$7.50</td><td class="r mono">$11.25</td></tr>
-      <tr><td style="color:var(--green)">OpenAI</td><td>GPT-4o Mini</td><td class="r mono">$0.15</td><td class="r mono">$0.60</td><td class="r mono">$0.01</td><td class="r mono">$0.45</td><td class="r mono">$0.68</td></tr>
+      <tr><td style="color:var(--blue)">Google</td><td>Gemini 2.5 Flash</td><td class="r mono">$0.30</td><td class="r mono">$2.50</td><td class="r mono">$0.03</td><td class="r mono">$1.24</td><td class="r mono">$1.86</td></tr>
+      <tr><td style="color:var(--blue)">Google</td><td>Gemini 2.0 Flash</td><td class="r mono">$0.10</td><td class="r mono">$0.40</td><td class="r mono">$0.006</td><td class="r mono">$0.24</td><td class="r mono">$0.36</td></tr>
+      <tr><td style="color:var(--green)">OpenAI</td><td>GPT-4.1</td><td class="r mono">$2.00</td><td class="r mono">$8.00</td><td class="r mono">$0.12</td><td class="r mono">$4.80</td><td class="r mono">$7.20</td></tr>
+      <tr><td style="color:var(--green)">OpenAI</td><td>GPT-4o</td><td class="r mono">$2.50</td><td class="r mono">$10.00</td><td class="r mono">$0.15</td><td class="r mono">$6.00</td><td class="r mono">$9.00</td></tr>
+      <tr><td style="color:var(--green)">OpenAI</td><td>GPT-4o Mini</td><td class="r mono">$0.15</td><td class="r mono">$0.60</td><td class="r mono">$0.009</td><td class="r mono">$0.36</td><td class="r mono">$0.54</td></tr>
     </tbody>
   </table>
+</div>
+
+<div class="callout green reveal" style="margin-top:12px;margin-bottom:4px">
+  <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+  <div><strong>Free tier:</strong> All Gemini models have a <strong>free tier</strong> with rate-limited access (no billing required). Viable for prototyping and low-volume batches. <strong>Batch discounts:</strong> Anthropic and Google both offer 50% off for async batch API calls.</div>
 </div>
 
 <!-- Cost comparison chart + breakdown donut -->
@@ -784,7 +790,7 @@
 <!-- Gemini pipeline callout -->
 <div class="callout green reveal">
   <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-  <div><strong>Gemini sweet spot:</strong> Gemini 2.5 Flash at $0.36 / 2,000 videos is 6.7x cheaper than Haiku and 25x cheaper than Sonnet for caption analysis. Use it as the first-pass classifier, then escalate ambiguous results to a stronger model.</div>
+  <div><strong>Cheapest cloud path:</strong> Gemini 2.0 Flash at $0.24 / 2,000 videos is the lowest-cost option. Gemini 2.5 Flash at $1.24 / 2K offers better quality at still 6.8x cheaper than Haiku. Use 2.0 Flash for first-pass, escalate ambiguous results to 2.5 Flash or Pro.</div>
 </div>
 
 <!-- Video Transcription + Analysis -->
@@ -798,11 +804,11 @@
     </thead>
     <tbody>
       <tr><td>Whisper transcription only</td><td class="r mono">$0.002</td><td class="r mono">$0.10</td><td class="r mono">$4.00</td></tr>
-      <tr><td>Whisper + Claude Sonnet</td><td class="r mono">$0.012</td><td class="r mono">$0.60</td><td class="r mono">$24.00</td></tr>
-      <tr><td>Whisper + Claude Haiku</td><td class="r mono">$0.005</td><td class="r mono">$0.25</td><td class="r mono">$10.00</td></tr>
-      <tr><td>Whisper + Gemini 2.5 Pro</td><td class="r mono">$0.008</td><td class="r mono">$0.40</td><td class="r mono">$16.00</td></tr>
-      <tr><td>Whisper + Gemini 2.5 Flash</td><td class="r mono">$0.003</td><td class="r mono">$0.13</td><td class="r mono">$5.20</td></tr>
-      <tr class="row-total"><td>Whisper + Gemini 2.0 Flash</td><td class="r mono c-green">$0.002</td><td class="r mono c-green">$0.12</td><td class="r mono c-green">$4.80</td></tr>
+      <tr><td>Whisper + Claude Sonnet 4.6</td><td class="r mono">$0.013</td><td class="r mono">$0.63</td><td class="r mono">$25.00</td></tr>
+      <tr><td>Whisper + Claude Haiku 4.5</td><td class="r mono">$0.006</td><td class="r mono">$0.28</td><td class="r mono">$11.00</td></tr>
+      <tr><td>Whisper + Gemini 2.5 Pro</td><td class="r mono">$0.008</td><td class="r mono">$0.41</td><td class="r mono">$16.50</td></tr>
+      <tr><td>Whisper + Gemini 2.5 Flash</td><td class="r mono">$0.004</td><td class="r mono">$0.18</td><td class="r mono">$7.10</td></tr>
+      <tr class="row-total"><td>Whisper + Gemini 2.0 Flash</td><td class="r mono c-green">$0.002</td><td class="r mono c-green">$0.12</td><td class="r mono c-green">$4.60</td></tr>
     </tbody>
   </table>
 </div>
@@ -824,13 +830,14 @@
       <tr><th>Model</th><th class="r">Size</th><th class="r">VRAM Req.</th><th class="r">tok/s (RTX 4090)</th><th class="r">2,000 vid batch</th><th>Best For</th></tr>
     </thead>
     <tbody>
-      <tr><td>Llama 3.3 70B (Q4)</td><td class="r mono">40 GB</td><td class="r mono">48 GB</td><td class="r mono">~25</td><td class="r mono">~32 min</td><td>Highest quality local analysis</td></tr>
-      <tr><td>Qwen 2.5 32B (Q4)</td><td class="r mono">20 GB</td><td class="r mono">24 GB</td><td class="r mono">~45</td><td class="r mono">~18 min</td><td>Balanced quality/speed</td></tr>
-      <tr><td>Gemma 3 27B (Q4)</td><td class="r mono">17 GB</td><td class="r mono">24 GB</td><td class="r mono">~50</td><td class="r mono">~16 min</td><td>Google-family, multilingual</td></tr>
-      <tr><td>Mistral Small 3.1 24B (Q4)</td><td class="r mono">14 GB</td><td class="r mono">16 GB</td><td class="r mono">~55</td><td class="r mono">~15 min</td><td>Fast classification, fits 16 GB</td></tr>
-      <tr><td>Phi-4 14B (Q4)</td><td class="r mono">8 GB</td><td class="r mono">12 GB</td><td class="r mono">~80</td><td class="r mono">~10 min</td><td>Lightweight, reasoning-strong</td></tr>
-      <tr><td>Llama 3.2 3B (Q8)</td><td class="r mono">3 GB</td><td class="r mono">6 GB</td><td class="r mono">~140</td><td class="r mono">~6 min</td><td>Fastest, basic classification only</td></tr>
+      <tr style="opacity:0.6"><td>Llama 3.3 70B (Q4)</td><td class="r mono">42 GB</td><td class="r mono">48 GB+</td><td class="r mono">~12 *</td><td class="r mono">~5.5 hrs *</td><td style="color:var(--amber)">Needs 2x GPU or CPU offload</td></tr>
+      <tr><td>Qwen 2.5 32B (Q4)</td><td class="r mono">21 GB</td><td class="r mono">24 GB</td><td class="r mono">~30</td><td class="r mono">~2.5 hrs</td><td>Best quality that fits single 4090</td></tr>
+      <tr><td>Gemma 3 27B (Q4)</td><td class="r mono">17 GB</td><td class="r mono">24 GB</td><td class="r mono">~40</td><td class="r mono">~1.8 hrs</td><td>Google-family, 128K ctx, multilingual</td></tr>
+      <tr><td>Mistral Small 3.1 24B (Q4)</td><td class="r mono">15 GB</td><td class="r mono">16 GB</td><td class="r mono">~40</td><td class="r mono">~1.8 hrs</td><td>Fast classification, fits 16 GB</td></tr>
+      <tr><td>Phi-4 14B (Q4)</td><td class="r mono">10 GB</td><td class="r mono">12 GB</td><td class="r mono">~82</td><td class="r mono">~50 min</td><td>Lightweight, reasoning-strong</td></tr>
+      <tr><td>Llama 3.2 3B (Q8)</td><td class="r mono">3 GB</td><td class="r mono">6 GB</td><td class="r mono">~170</td><td class="r mono">~25 min</td><td>Fastest, basic classification only</td></tr>
     </tbody>
+    <tfoot><tr><td colspan="6" style="font-size:11px;color:var(--dim);border:none;padding-top:8px">* Llama 70B exceeds 24 GB VRAM &mdash; requires CPU offload (kills throughput) or dual GPU. Batch times assume sequential processing with ~200 output tokens/video.</td></tr></tfoot>
   </table>
 </div>
 
@@ -842,7 +849,7 @@
     <ul>
       <li>Model <span>Phi-4 14B or Llama 3.2 3B</span></li>
       <li>Hardware <span>RTX 4060 / M2 Mac</span></li>
-      <li>Throughput <span>80-140 tok/s</span></li>
+      <li>Throughput <span>82-170 tok/s</span></li>
       <li>Cost/month <span style="color:var(--green)">$0 (electricity)</span></li>
     </ul>
   </div>
@@ -852,7 +859,7 @@
     <ul>
       <li>Model <span>Mistral Small 3.1 or Qwen 2.5 32B</span></li>
       <li>Hardware <span>RTX 4090 / M3 Max</span></li>
-      <li>Throughput <span>45-55 tok/s</span></li>
+      <li>Throughput <span>30-40 tok/s</span></li>
       <li>Cost/month <span style="color:var(--green)">$0 (electricity)</span></li>
     </ul>
   </div>
@@ -862,7 +869,7 @@
     <ul>
       <li>Model <span>Llama 3.3 70B</span></li>
       <li>Hardware <span>2x RTX 4090 / A100</span></li>
-      <li>Throughput <span>~25 tok/s</span></li>
+      <li>Throughput <span>~25-30 tok/s (dual GPU)</span></li>
       <li>Cost/month <span>~$150 (cloud VM)</span></li>
     </ul>
   </div>
@@ -896,7 +903,7 @@
         <td>Gemini 2.5 Flash <em>or</em> Local (Mistral 3.1)</td>
         <td>Captions + hashtags</td>
         <td>Category, sentiment, trend score</td>
-        <td class="r mono c-green">$0.36 <em>or $0</em></td>
+        <td class="r mono c-green">$1.24 <em>or $0</em></td>
       </tr>
       <tr>
         <td><strong>3. Transcribe</strong></td>
@@ -910,11 +917,11 @@
         <td>Claude Sonnet <em>or</em> Gemini 2.5 Pro</td>
         <td>200 transcripts + metadata</td>
         <td>Trend narratives, insights</td>
-        <td class="r mono">$1.80 – $4.50</td>
+        <td class="r mono">$2.10 – $5.00</td>
       </tr>
       <tr class="row-total">
         <td colspan="4"><strong>Total pipeline (cloud path)</strong></td>
-        <td class="r mono c-green"><strong>$2.56 – $5.26</strong></td>
+        <td class="r mono c-green"><strong>$3.74 – $6.64</strong></td>
       </tr>
     </tbody>
   </table>
@@ -994,13 +1001,114 @@
       <tr><td class="mono c-blue">1</td><td>Start with the <strong>Daily Tracking</strong> scenario (20 + 5 searches)</td><td>Best coverage-to-cost ratio at 2,425 credits/hr</td></tr>
       <tr><td class="mono c-blue">2</td><td>Filter by <code style="color:var(--cyan);background:var(--surface-2);padding:2px 6px;border-radius:3px;font-size:11px">past_week</code> to surface active trends</td><td>Avoids stale historical posts; focuses on current signals</td></tr>
       <tr><td class="mono c-blue">3</td><td>Skip comments initially &mdash; add only for deep-dive</td><td>Saves 500&ndash;2,200 credits/hr on the collection side</td></tr>
-      <tr><td class="mono c-blue">4</td><td>Use <strong>Gemini 2.5 Flash</strong> as first-pass classifier</td><td>$0.36 per 2K videos &mdash; 25x cheaper than Sonnet</td></tr>
+      <tr><td class="mono c-blue">4</td><td>Use <strong>Gemini 2.0 Flash</strong> as first-pass classifier (free tier available)</td><td>$0.24 per 2K videos &mdash; 35x cheaper than Sonnet; free for prototyping</td></tr>
       <tr><td class="mono c-blue">5</td><td>Run <strong>Mistral Small 3.1 locally</strong> for zero-cost classification</td><td>Eliminates recurring API cost; 16 GB VRAM sufficient</td></tr>
       <tr><td class="mono c-blue">6</td><td>Escalate only top 10% to <strong>Claude Sonnet / Gemini Pro</strong></td><td>Deep analysis on 200 videos instead of 2,000 &mdash; 10x savings</td></tr>
       <tr><td class="mono c-blue">7</td><td>Run searches concurrently &mdash; API supports 100K queued tasks</td><td>All 25 searches complete in ~3 min vs 75 min sequential</td></tr>
       <tr><td class="mono c-blue">8</td><td>Add geo-specific keywords (Miami, LA, NYC)</td><td>Higher relevance for US market; reduces international noise</td></tr>
     </tbody>
   </table>
+</div>
+
+<!-- ━━ DATA365 PRICING CONTEXT ━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="section-head reveal">
+  <h2>Data365 Plans &mdash; Credits in Real Dollars</h2>
+  <div class="line"></div>
+</div>
+
+<div class="card reveal" style="padding:16px 20px">
+  <table>
+    <thead><tr><th>Plan</th><th class="r">Price</th><th class="r">Monthly Credits</th><th class="r">$/credit</th><th class="r">Daily Tracking cost</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Free Trial</strong></td><td class="r mono">$0</td><td class="r mono">Limited</td><td class="r mono">—</td><td class="r mono">—</td><td>14 days, no card required</td></tr>
+      <tr><td><strong>Basic</strong></td><td class="r mono">&euro;300/mo (~$325)</td><td class="r mono">500,000</td><td class="r mono">$0.00065</td><td class="r mono">$1.58/hr</td><td>1 social network</td></tr>
+      <tr><td><strong>Standard</strong></td><td class="r mono">&euro;850/mo (~$920)</td><td class="r mono">1,000,000</td><td class="r mono">$0.00092</td><td class="r mono">$2.23/hr</td><td>3 social networks</td></tr>
+      <tr><td><strong>Custom</strong></td><td class="r mono">Negotiated</td><td class="r mono">up to 100M</td><td class="r mono">varies</td><td class="r mono">varies</td><td>Up to 6 networks</td></tr>
+    </tbody>
+  </table>
+  <div class="callout amber" style="margin-top:12px">
+    <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    <div>At 2,425 credits/hr (recommended scenario), the <strong>Basic plan gives ~206 hours/month</strong> of trend tracking &mdash; roughly 7 hours/day. More than enough for daily monitoring. Running 1 hour/day leaves headroom for 8 months on a single plan.</div>
+  </div>
+</div>
+
+<!-- ━━ CREATIVE STRATEGIES ━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="section-head reveal">
+  <h2>Creative Cost-Cutting Strategies</h2>
+  <div class="line"></div>
+</div>
+
+<div class="card reveal" style="padding:16px 20px">
+  <table>
+    <thead><tr><th style="width:30px">#</th><th>Strategy</th><th>How It Works</th><th>Savings</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="mono c-green">1</td>
+        <td><strong>Gemini free tier for classification</strong></td>
+        <td>All Gemini models offer free rate-limited access. Process captions through Gemini 2.0 Flash free tier during off-peak hours</td>
+        <td class="c-green">100% off LLM cost</td>
+      </tr>
+      <tr>
+        <td class="mono c-green">2</td>
+        <td><strong>Hashtag-only pre-filter (no LLM needed)</strong></td>
+        <td>Build a scoring dict of 200+ niche hashtags with weights. Filter posts by hashtag score before any LLM call &mdash; pure string matching, zero cost</td>
+        <td class="c-green">Eliminates 60-80% of LLM calls</td>
+      </tr>
+      <tr>
+        <td class="mono c-green">3</td>
+        <td><strong>Engagement velocity detection</strong></td>
+        <td>Compare play_count/digg_count against post age. Posts gaining views faster than baseline are trending &mdash; no AI needed, pure math</td>
+        <td class="c-green">Finds trends with zero LLM cost</td>
+      </tr>
+      <tr>
+        <td class="mono c-green">4</td>
+        <td><strong>Cache + diff strategy</strong></td>
+        <td>Data365 caches results for 7 days. Run the same search daily via GET (free) and diff against yesterday. Only analyse <em>new</em> posts with LLM</td>
+        <td class="c-green">80-90% fewer credits after day 1</td>
+      </tr>
+      <tr>
+        <td class="mono c-green">5</td>
+        <td><strong>Monitor creator feeds, not keywords</strong></td>
+        <td>Once you identify top 50 creators, fetch their profiles (9 credits each) instead of running keyword searches (107 credits each). Profile feed shows latest posts</td>
+        <td class="c-green">12x fewer credits for same coverage</td>
+      </tr>
+      <tr>
+        <td class="mono c-green">6</td>
+        <td><strong>TikTok Creative Center (free)</strong></td>
+        <td>TikTok's own Creative Center shows trending hashtags, songs, and creators for free. Use it as a signal source to narrow Data365 queries</td>
+        <td class="c-green">Free trend signals, focused API spend</td>
+      </tr>
+      <tr>
+        <td class="mono c-green">7</td>
+        <td><strong>Batch API pricing (50% off)</strong></td>
+        <td>Both Anthropic and Google offer ~50% discount on async batch API calls. Queue analysis jobs overnight instead of real-time</td>
+        <td class="c-green">50% off all LLM costs</td>
+      </tr>
+      <tr>
+        <td class="mono c-green">8</td>
+        <td><strong>RSS + Google Trends cross-reference</strong></td>
+        <td>Monitor Google Trends for procedure names (free API). Only trigger expensive TikTok searches when a keyword spikes &mdash; event-driven, not scheduled</td>
+        <td class="c-green">Eliminates idle searches entirely</td>
+      </tr>
+      <tr>
+        <td class="mono c-green">9</td>
+        <td><strong>Whisper.cpp local transcription</strong></td>
+        <td>Run whisper.cpp with the turbo model locally. Processes ~10x realtime on RTX 4090 &mdash; 2,000 videos (avg 20s) in ~67 minutes, zero cost</td>
+        <td class="c-green">Saves $4/batch vs Whisper API</td>
+      </tr>
+      <tr>
+        <td class="mono c-green">10</td>
+        <td><strong>Sound fingerprinting for trend detection</strong></td>
+        <td>Trending sounds precede trending content. Track which audio tracks appear across multiple posts &mdash; pure metadata, no LLM, no transcription</td>
+        <td class="c-green">Detects trends 24-48 hrs earlier</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="callout blue reveal" style="margin-top:12px">
+  <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  <div><strong>Combining strategies 2 + 3 + 4 + 6</strong> can reduce total pipeline cost to near-zero for daily monitoring. Use the API budget for weekly deep-dives with full LLM analysis on the top 100 posts only.</div>
 </div>
 
 <!-- ━━ FOOTER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
@@ -1068,10 +1176,10 @@ new Chart(document.getElementById('c2'), {
 new Chart(document.getElementById('c3'), {
   type: 'bar',
   data: {
-    labels: ['Gemini 2.0 Flash', 'Gemini 2.5 Flash', 'GPT-4o Mini', 'Haiku 4.5', 'Gemini 2.5 Pro', 'GPT-4o', 'Sonnet 4.6'],
+    labels: ['Gemini 2.0 Flash', 'GPT-4o Mini', 'Gemini 2.5 Flash', 'Haiku 4.5', 'GPT-4.1', 'Gemini 2.5 Pro', 'GPT-4o', 'Sonnet 4.6'],
     datasets: [{
-      data: [0.24, 0.36, 0.45, 2.40, 5.00, 7.50, 9.00],
-      backgroundColor: ['#22C55E','#22C55E','#22D3EE','#818CF8','#3B82F6','#D97706','#EF4444'],
+      data: [0.24, 0.36, 1.24, 2.80, 4.80, 5.00, 6.00, 8.40],
+      backgroundColor: ['#22C55E','#22C55E','#22D3EE','#818CF8','#22D3EE','#3B82F6','#D97706','#EF4444'],
       borderRadius: 4,
       barPercentage: 0.6,
     }]
@@ -1116,13 +1224,13 @@ new Chart(document.getElementById('c5'), {
     labels: ['Sonnet 4.6', 'Gemini 2.5 Pro', 'Haiku 4.5', 'Gemini 2.5 Flash', 'Gemini 2.0 Flash', 'Mistral 3.1 (local)', 'Phi-4 (local)'],
     datasets: [{
       label: 'Caption analysis',
-      data: [9.00, 5.00, 2.40, 0.36, 0.24, 0, 0],
+      data: [8.40, 5.00, 2.80, 1.24, 0.24, 0, 0],
       backgroundColor: '#3B82F6',
       borderRadius: 4,
       barPercentage: 0.5,
     },{
       label: '+ Transcription',
-      data: [24.00, 16.00, 10.00, 5.20, 4.80, 0, 0],
+      data: [25.00, 16.50, 11.00, 7.10, 4.60, 0, 0],
       backgroundColor: '#818CF8',
       borderRadius: 4,
       barPercentage: 0.5,
@@ -1145,10 +1253,10 @@ new Chart(document.getElementById('c5'), {
 new Chart(document.getElementById('c6'), {
   type: 'bar',
   data: {
-    labels: ['Llama 3.2 3B', 'Phi-4 14B', 'Mistral 3.1 24B', 'Gemma 3 27B', 'Qwen 2.5 32B', 'Llama 3.3 70B'],
+    labels: ['Llama 3.2 3B', 'Phi-4 14B', 'Mistral 3.1 24B', 'Gemma 3 27B', 'Qwen 2.5 32B', 'Llama 3.3 70B *'],
     datasets: [{
-      data: [140, 80, 55, 50, 45, 25],
-      backgroundColor: ['#22C55E','#22C55E','#3B82F6','#3B82F6','#818CF8','#D97706'],
+      data: [170, 82, 40, 40, 30, 12],
+      backgroundColor: ['#22C55E','#22C55E','#3B82F6','#3B82F6','#818CF8','#EF4444'],
       borderRadius: 4,
       barPercentage: 0.55,
     }]
