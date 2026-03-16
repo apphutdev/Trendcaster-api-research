@@ -994,6 +994,233 @@
   </div>
 </div>
 
+<!-- ━━ TREND DISCOVERY METHODOLOGY ━━━━━━━━━━━━━━━━ -->
+<div class="section-head reveal">
+  <h2>Trend Discovery Formula &mdash; Weekly Top 5</h2>
+  <div class="line"></div>
+</div>
+
+<div class="card reveal" style="padding:20px 24px">
+  <p style="color:var(--text-2);margin-bottom:16px">A repeatable, week-over-week pipeline to surface the top 5 trending topics in any niche. Uses Data365 API data + a scoring algorithm &mdash; no subjective judgement required.</p>
+
+  <!-- STEP 1 -->
+  <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:20px">
+    <div style="min-width:40px;height:40px;border-radius:10px;background:var(--cyan-dim);border:1px solid rgba(34,211,238,0.25);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--cyan);font-family:var(--mono)">1</div>
+    <div style="flex:1">
+      <h4 style="color:var(--cyan);margin-bottom:4px">Seed your keyword universe</h4>
+      <p style="color:var(--text-2);font-size:14px;margin-bottom:8px">Build a list of 15&ndash;25 search terms that cover the niche at different granularities. You only do this once &mdash; then refine it over time.</p>
+      <table style="margin-bottom:0">
+        <thead><tr><th>Layer</th><th>Purpose</th><th>Example Terms</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--cyan)">Broad</td><td>Catch-all volume</td><td><code>plastic surgery</code>, <code>cosmetic surgery</code>, <code>plastic surgeon</code></td></tr>
+          <tr><td style="color:var(--blue)">Procedure</td><td>Specific treatments</td><td><code>rhinoplasty</code>, <code>BBL</code>, <code>facelift</code>, <code>lip filler</code>, <code>tummy tuck</code>, <code>mommy makeover</code>, <code>breast augmentation</code>, <code>botox</code></td></tr>
+          <tr><td style="color:var(--indigo)">Outcome</td><td>Patient experience</td><td><code>before and after surgery</code>, <code>plastic surgery recovery</code>, <code>surgery gone wrong</code></td></tr>
+          <tr><td style="color:var(--green)">Cultural</td><td>Trending formats</td><td><code>glow up transformation</code>, <code>surgeon reacts</code>, <code>surgery check</code></td></tr>
+          <tr><td style="color:var(--amber)">Geo-specific</td><td>US market filter</td><td><code>plastic surgery Miami</code>, <code>LA plastic surgeon</code>, <code>NYC cosmetic</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:20px">
+    <div style="min-width:40px;height:40px;border-radius:10px;background:var(--blue-dim);border:1px solid rgba(59,130,246,0.25);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--blue);font-family:var(--mono)">2</div>
+    <div style="flex:1">
+      <h4 style="color:var(--blue);margin-bottom:4px">Collect this week&rsquo;s snapshot</h4>
+      <p style="color:var(--text-2);font-size:14px;margin-bottom:8px">Run your keyword + hashtag searches via Data365, filtering to <code>from_date = 7 days ago</code>. Fetch 50&ndash;100 posts per search. For each post, capture:</p>
+      <div class="grid-3" style="gap:10px">
+        <div style="background:var(--surface-2);border-radius:8px;padding:12px;border:1px solid var(--border)">
+          <div style="font-weight:600;color:var(--text);font-size:13px;margin-bottom:4px">Engagement metrics</div>
+          <div style="font-size:12px;color:var(--muted)">play_count, digg_count (likes), comment_count, share_count, collect_count</div>
+        </div>
+        <div style="background:var(--surface-2);border-radius:8px;padding:12px;border:1px solid var(--border)">
+          <div style="font-weight:600;color:var(--text);font-size:13px;margin-bottom:4px">Content metadata</div>
+          <div style="font-size:12px;color:var(--muted)">caption text, hashtags[], music_id, music_title, video_duration, create_time</div>
+        </div>
+        <div style="background:var(--surface-2);border-radius:8px;padding:12px;border:1px solid var(--border)">
+          <div style="font-weight:600;color:var(--text);font-size:13px;margin-bottom:4px">Creator signal</div>
+          <div style="font-size:12px;color:var(--muted)">author_id, author_username, follower_count, is_verified</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:20px">
+    <div style="min-width:40px;height:40px;border-radius:10px;background:var(--indigo-dim);border:1px solid rgba(129,140,248,0.25);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--indigo);font-family:var(--mono)">3</div>
+    <div style="flex:1">
+      <h4 style="color:var(--indigo);margin-bottom:4px">Extract topic clusters (LLM or rules-based)</h4>
+      <p style="color:var(--text-2);font-size:14px;margin-bottom:8px">Group the collected posts into <strong>topics</strong>. A topic is not a keyword &mdash; it&rsquo;s a conversation. Multiple keywords can map to the same topic.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:10px">
+        <div style="background:var(--surface-2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);flex:1;min-width:220px">
+          <div style="font-weight:600;color:var(--green);font-size:12px;margin-bottom:4px">Option A &mdash; LLM clustering (recommended)</div>
+          <div style="font-size:12px;color:var(--text-2)">Send batches of 25 captions to Gemini 2.5 Flash with prompt: <em>&ldquo;Group these TikTok captions into distinct topic clusters. For each cluster, return: topic_name, post_ids[], and a one-line summary.&rdquo;</em></div>
+        </div>
+        <div style="background:var(--surface-2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);flex:1;min-width:220px">
+          <div style="font-weight:600;color:var(--amber);font-size:12px;margin-bottom:4px">Option B &mdash; Hashtag co-occurrence (zero cost)</div>
+          <div style="font-size:12px;color:var(--text-2)">Build a hashtag co-occurrence graph. Posts that share 2+ hashtags belong to the same cluster. Use community detection (e.g., Louvain algorithm) to find natural groupings. No LLM needed.</div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--dim)">Typical output: 15&ndash;30 topic clusters from 500&ndash;750 posts. Examples: &ldquo;BBL safety debate&rdquo;, &ldquo;Deep plane facelift technique&rdquo;, &ldquo;Ozempic face correction&rdquo;, &ldquo;Surgeon reacts format&rdquo;</p>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:20px">
+    <div style="min-width:40px;height:40px;border-radius:10px;background:var(--green-dim);border:1px solid rgba(34,197,94,0.25);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--green);font-family:var(--mono)">4</div>
+    <div style="flex:1">
+      <h4 style="color:var(--green);margin-bottom:4px">Score &amp; rank each topic</h4>
+      <p style="color:var(--text-2);font-size:14px;margin-bottom:8px">Apply the <strong>Trend Score</strong> formula to each topic cluster. This is the core algorithm &mdash; pure math, no opinion.</p>
+
+      <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:12px">
+        <div style="font-family:var(--mono);font-size:14px;color:var(--cyan);margin-bottom:10px">trend_score = (0.35 &times; velocity) + (0.25 &times; spread) + (0.20 &times; acceleration) + (0.10 &times; format_novelty) + (0.10 &times; creator_diversity)</div>
+        <table style="margin:0">
+          <thead><tr><th style="width:170px">Signal</th><th>What it measures</th><th style="width:280px">How to calculate</th></tr></thead>
+          <tbody>
+            <tr>
+              <td style="color:var(--cyan);font-weight:600">Velocity (35%)</td>
+              <td>How fast posts in this topic are gaining views relative to their age</td>
+              <td><code style="font-size:11px;color:var(--muted)">median(play_count / hours_since_post)</code> across all posts in cluster, normalised 0&ndash;1 against the week&rsquo;s max</td>
+            </tr>
+            <tr>
+              <td style="color:var(--blue);font-weight:600">Spread (25%)</td>
+              <td>Volume of posts about this topic vs other topics this week</td>
+              <td><code style="font-size:11px;color:var(--muted)">post_count_in_topic / total_posts_this_week</code>, normalised 0&ndash;1</td>
+            </tr>
+            <tr>
+              <td style="color:var(--indigo);font-weight:600">Acceleration (20%)</td>
+              <td>Is this topic growing compared to last week?</td>
+              <td><code style="font-size:11px;color:var(--muted)">(this_week_posts - last_week_posts) / last_week_posts</code>. &gt;0 = growing, &lt;0 = declining. Clamped to [-1, 3], normalised 0&ndash;1</td>
+            </tr>
+            <tr>
+              <td style="color:var(--green);font-weight:600">Format novelty (10%)</td>
+              <td>Is this using a new sound, duet format, or template?</td>
+              <td><code style="font-size:11px;color:var(--muted)">count(new_music_ids) / total_posts</code>. A music_id not seen in prior 4 weeks = novel. Normalised 0&ndash;1</td>
+            </tr>
+            <tr>
+              <td style="color:var(--amber);font-weight:600">Creator diversity (10%)</td>
+              <td>Are multiple unrelated creators posting, or just one going viral?</td>
+              <td><code style="font-size:11px;color:var(--muted)">unique_authors / post_count</code>. High ratio = genuine trend. Low ratio = single viral post. Normalised 0&ndash;1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout blue" style="margin-top:0">
+        <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <div><strong>Why these weights?</strong> Velocity is weighted highest because TikTok&rsquo;s algorithm amplifies fast-growing content &mdash; a post gaining 100K views in 6 hours matters more than one with 500K over 3 months. Acceleration is the &ldquo;trend vs topic&rdquo; separator &mdash; rhinoplasty is always discussed (topic), but &ldquo;ultrasonic rhinoplasty&rdquo; spiking 400% week-over-week is a trend. Creator diversity prevents a single viral outlier from being labelled a trend.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:20px">
+    <div style="min-width:40px;height:40px;border-radius:10px;background:var(--amber-dim);border:1px solid rgba(217,119,6,0.25);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--amber);font-family:var(--mono)">5</div>
+    <div style="flex:1">
+      <h4 style="color:var(--amber);margin-bottom:4px">Filter, rank, and output the Top 5</h4>
+      <p style="color:var(--text-2);font-size:14px;margin-bottom:8px">Apply filters, then take the top 5 by trend_score.</p>
+      <table style="margin-bottom:10px">
+        <thead><tr><th>Filter</th><th>Rule</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Minimum post count</td><td><code>&ge; 5 posts</code> in cluster</td><td>Prevents noise from 1&ndash;2 random posts clustering together</td></tr>
+          <tr><td>Minimum creators</td><td><code>&ge; 3 unique authors</code></td><td>Ensures it&rsquo;s a trend, not a single creator&rsquo;s series</td></tr>
+          <tr><td>Recency gate</td><td><code>&ge; 1 post from past 48 hrs</code></td><td>Removes topics that already peaked and died</td></tr>
+          <tr><td>Dedup vs prior weeks</td><td>If topic was #1&ndash;5 for 3+ consecutive weeks, label it &ldquo;established&rdquo; and deprioritise</td><td>Surfaces <em>new</em> trends, not permanent topics like &ldquo;rhinoplasty results&rdquo;</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:13px;color:var(--text-2)">Final output per trend: <strong>topic name</strong>, trend_score, post count, top 3 example videos (by views), representative hashtags, week-over-week change, and a one-line LLM-generated summary of <em>why</em> this is trending.</p>
+    </div>
+  </div>
+
+  <!-- STEP 6 -->
+  <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:8px">
+    <div style="min-width:40px;height:40px;border-radius:10px;background:var(--red-dim);border:1px solid rgba(239,68,68,0.25);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--red);font-family:var(--mono)">6</div>
+    <div style="flex:1">
+      <h4 style="color:var(--red);margin-bottom:4px">Store baseline &amp; repeat</h4>
+      <p style="color:var(--text-2);font-size:14px;margin-bottom:8px">Save this week&rsquo;s data as next week&rsquo;s baseline. The acceleration signal requires at least 2 weeks of data, so <strong>Week 1 is calibration</strong> &mdash; you get reliable top-5 rankings from Week 2 onward.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div style="background:var(--surface-2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);flex:1;min-width:180px">
+          <div style="font-weight:600;color:var(--text);font-size:12px">Store per week</div>
+          <div style="font-size:11px;color:var(--muted)">Post IDs, topic clusters, scores, music_ids, author_ids, hashtag counts</div>
+        </div>
+        <div style="background:var(--surface-2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);flex:1;min-width:180px">
+          <div style="font-weight:600;color:var(--text);font-size:12px">Rolling window</div>
+          <div style="font-size:11px;color:var(--muted)">Keep 4 weeks of history for acceleration &amp; format novelty calculations</div>
+        </div>
+        <div style="background:var(--surface-2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);flex:1;min-width:180px">
+          <div style="font-weight:600;color:var(--text);font-size:12px">Storage cost</div>
+          <div style="font-size:11px;color:var(--muted)">~500 KB/week in JSON. SQLite or a simple CSV works fine at this scale</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Example output -->
+<div class="card reveal" style="padding:16px 20px;margin-top:16px">
+  <div class="card-header" style="padding:0 0 12px 0;border-bottom:1px solid var(--border);margin-bottom:14px">
+    <div class="card-title">Example Output &mdash; Week of March 10, 2026</div>
+    <div class="card-tag cyan">Simulated</div>
+  </div>
+  <table>
+    <thead><tr><th style="width:30px">#</th><th>Trend</th><th class="r">Score</th><th class="r">Posts</th><th class="r">Creators</th><th class="r">WoW &Delta;</th><th>Signal</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="mono" style="color:var(--green);font-weight:700">1</td>
+        <td><strong>Ultrasonic rhinoplasty</strong><br><span style="font-size:11px;color:var(--muted)">New technique getting surgeon demo videos + patient POV reactions</span></td>
+        <td class="r mono c-green">0.87</td>
+        <td class="r mono">34</td>
+        <td class="r mono">18</td>
+        <td class="r mono c-green">+340%</td>
+        <td><span class="tag" style="font-size:10px">velocity</span> <span class="tag" style="font-size:10px">acceleration</span></td>
+      </tr>
+      <tr>
+        <td class="mono" style="color:var(--green);font-weight:700">2</td>
+        <td><strong>&ldquo;Ozempic face&rdquo; correction</strong><br><span style="font-size:11px;color:var(--muted)">Fat grafting &amp; filler to reverse facial volume loss from weight loss drugs</span></td>
+        <td class="r mono c-green">0.79</td>
+        <td class="r mono">28</td>
+        <td class="r mono">15</td>
+        <td class="r mono c-green">+180%</td>
+        <td><span class="tag" style="font-size:10px">spread</span> <span class="tag" style="font-size:10px">acceleration</span></td>
+      </tr>
+      <tr>
+        <td class="mono" style="color:var(--blue);font-weight:700">3</td>
+        <td><strong>Deep plane facelift at 30</strong><br><span style="font-size:11px;color:var(--muted)">Younger patients getting preventive deep plane facelifts &mdash; &ldquo;why I did it at 32&rdquo; format</span></td>
+        <td class="r mono">0.71</td>
+        <td class="r mono">19</td>
+        <td class="r mono">12</td>
+        <td class="r mono c-green">+95%</td>
+        <td><span class="tag" style="font-size:10px">creator diversity</span> <span class="tag" style="font-size:10px">velocity</span></td>
+      </tr>
+      <tr>
+        <td class="mono" style="color:var(--blue);font-weight:700">4</td>
+        <td><strong>Surgeon reacts to celebrity work</strong><br><span style="font-size:11px;color:var(--muted)">Board-certified surgeons duetting celebrity photos, analysing likely procedures</span></td>
+        <td class="r mono">0.65</td>
+        <td class="r mono">42</td>
+        <td class="r mono">8</td>
+        <td class="r mono c-amber">+15%</td>
+        <td><span class="tag" style="font-size:10px">spread</span> <span class="tag" style="font-size:10px">format novelty</span></td>
+      </tr>
+      <tr>
+        <td class="mono" style="color:var(--blue);font-weight:700">5</td>
+        <td><strong>Turkey vs US price comparison</strong><br><span style="font-size:11px;color:var(--muted)">Medical tourism debate &mdash; cost breakdowns with complication rate data</span></td>
+        <td class="r mono">0.58</td>
+        <td class="r mono">15</td>
+        <td class="r mono">11</td>
+        <td class="r mono c-green">+220%</td>
+        <td><span class="tag" style="font-size:10px">acceleration</span> <span class="tag" style="font-size:10px">creator diversity</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="font-size:11px;color:var(--dim);margin-top:8px">Scores are illustrative. Real scores depend on your niche baseline. &ldquo;Rhinoplasty results&rdquo; (perma-topic) was filtered out by the 3-week dedup rule.</p>
+</div>
+
+<!-- Pipeline timing -->
+<div class="callout green reveal" style="margin-top:12px">
+  <svg class="callout-icon" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+  <div><strong>End-to-end timing:</strong> Step 2 (data collection) takes ~15 min with concurrent API calls. Step 3 (LLM clustering) takes ~2 min with Gemini 2.5 Flash. Step 4 (scoring) is instant &mdash; pure math on ~750 rows. <strong>Total: ~20 minutes from trigger to ranked top 5.</strong> Fully automatable as a weekly cron job.</div>
+</div>
+
 <!-- ━━ MONTHLY COST ESTIMATE ━━━━━━━━━━━━━━━━━━━━━━ -->
 <div class="section-head reveal">
   <h2>Real Monthly Cost &mdash; Single Niche, Weekly Top 5</h2>
