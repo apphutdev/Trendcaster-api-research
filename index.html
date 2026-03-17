@@ -489,6 +489,19 @@
 </head>
 <body>
 
+<style>
+  .shell.locked { display: none !important; }
+  #pw-gate.hidden { opacity: 0; pointer-events: none; }
+</style>
+<script>
+  // If already authed, remove the lock class before paint
+  if (sessionStorage.getItem('tc-auth') === '1') {
+    document.write('<style>#pw-gate{display:none!important}</style>');
+  } else {
+    document.write('<style>.shell{display:none!important}</style>');
+  }
+</script>
+
 <!-- ━━ PASSWORD GATE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
 <div id="pw-gate" style="position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center">
   <div style="text-align:center;max-width:380px;padding:24px">
@@ -508,57 +521,6 @@
     </form>
   </div>
 </div>
-
-<script>
-(function(){
-  // SHA-256 hash of the password — to change password, update this hash
-  const HASH = '1de6007d165e439031b58308b26f02dfb83da8be2dc5db22035ad23fd36e7962';
-
-  async function sha256(str) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-  }
-
-  // Wait for DOM before accessing .shell
-  document.addEventListener('DOMContentLoaded', function() {
-    const gate = document.getElementById('pw-gate');
-    const form = document.getElementById('pw-form');
-    const input = document.getElementById('pw-input');
-    const error = document.getElementById('pw-error');
-    const shell = document.querySelector('.shell');
-
-    if (sessionStorage.getItem('tc-auth') === '1') {
-      gate.remove();
-      return;
-    }
-
-    shell.style.display = 'none';
-
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const val = input.value.trim();
-      if (!val) return;
-
-      const hash = await sha256(val);
-      if (hash === HASH) {
-        sessionStorage.setItem('tc-auth', '1');
-        gate.style.transition = 'opacity .3s';
-        gate.style.opacity = '0';
-        shell.style.display = '';
-        setTimeout(() => gate.remove(), 300);
-      } else {
-        error.textContent = 'Incorrect password';
-        input.value = '';
-        input.focus();
-        input.style.borderColor = 'var(--red)';
-        setTimeout(() => { error.textContent = ''; input.style.borderColor = 'var(--border-2)'; }, 2000);
-      }
-    });
-
-    input.focus();
-  });
-})();
-</script>
 
 <div class="shell">
 
@@ -1751,6 +1713,48 @@ Chart.defaults.plugins.tooltip.padding = 10;
 Chart.defaults.plugins.tooltip.titleFont = { family: F, size: 12, weight: '600' };
 Chart.defaults.plugins.tooltip.bodyFont = { family: M, size: 12 };
 Chart.defaults.plugins.tooltip.displayColors = false;
+</script>
+
+<script>
+// ━━ PASSWORD AUTH (runs after all DOM is ready) ━━━━━
+(function(){
+  const HASH = '1de6007d165e439031b58308b26f02dfb83da8be2dc5db22035ad23fd36e7962';
+
+  if (sessionStorage.getItem('tc-auth') === '1') return;
+
+  async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  var gate = document.getElementById('pw-gate');
+  var form = document.getElementById('pw-form');
+  var input = document.getElementById('pw-input');
+  var err = document.getElementById('pw-error');
+  var shell = document.querySelector('.shell');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var val = input.value.trim();
+    if (!val) return;
+    var hash = await sha256(val);
+    if (hash === HASH) {
+      sessionStorage.setItem('tc-auth', '1');
+      shell.style.display = '';
+      gate.style.transition = 'opacity .3s';
+      gate.style.opacity = '0';
+      setTimeout(function(){ gate.remove(); }, 300);
+    } else {
+      err.textContent = 'Incorrect password';
+      input.value = '';
+      input.focus();
+      input.style.borderColor = 'var(--red)';
+      setTimeout(function(){ err.textContent = ''; input.style.borderColor = 'var(--border-2)'; }, 2000);
+    }
+  });
+
+  input.focus();
+})();
 </script>
 </body>
 </html>
