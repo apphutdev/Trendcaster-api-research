@@ -1740,10 +1740,7 @@ Chart.defaults.plugins.tooltip.displayColors = false;
     var hash = await sha256(val);
     if (hash === HASH) {
       sessionStorage.setItem('tc-auth', '1');
-      shell.style.display = '';
-      gate.style.transition = 'opacity .3s';
-      gate.style.opacity = '0';
-      setTimeout(function(){ gate.remove(); }, 300);
+      location.reload();
     } else {
       err.textContent = 'Incorrect password';
       input.value = '';
