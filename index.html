@@ -512,7 +512,7 @@
 <script>
 (function(){
   // SHA-256 hash of the password — to change password, update this hash
-  const HASH = 'bc321e567fd3f52fcdf053f68b9d6568a84c241d36994b23ddb180593659c2fb';
+  const HASH = '1de6007d165e439031b58308b26f02dfb83da8be2dc5db22035ad23fd36e7962';
 
   async function sha256(str) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
