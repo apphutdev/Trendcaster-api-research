@@ -519,40 +519,44 @@
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
   }
 
-  const gate = document.getElementById('pw-gate');
-  const form = document.getElementById('pw-form');
-  const input = document.getElementById('pw-input');
-  const error = document.getElementById('pw-error');
+  // Wait for DOM before accessing .shell
+  document.addEventListener('DOMContentLoaded', function() {
+    const gate = document.getElementById('pw-gate');
+    const form = document.getElementById('pw-form');
+    const input = document.getElementById('pw-input');
+    const error = document.getElementById('pw-error');
+    const shell = document.querySelector('.shell');
 
-  // Check if already authenticated this session
-  if (sessionStorage.getItem('tc-auth') === '1') {
-    gate.remove();
-  } else {
-    document.querySelector('.shell').style.display = 'none';
-  }
-
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const val = input.value.trim();
-    if (!val) return;
-
-    const hash = await sha256(val);
-    if (hash === HASH) {
-      sessionStorage.setItem('tc-auth', '1');
-      gate.style.transition = 'opacity .3s';
-      gate.style.opacity = '0';
-      document.querySelector('.shell').style.display = '';
-      setTimeout(() => gate.remove(), 300);
-    } else {
-      error.textContent = 'Incorrect password';
-      input.value = '';
-      input.focus();
-      input.style.borderColor = 'var(--red)';
-      setTimeout(() => { error.textContent = ''; input.style.borderColor = 'var(--border-2)'; }, 2000);
+    if (sessionStorage.getItem('tc-auth') === '1') {
+      gate.remove();
+      return;
     }
-  });
 
-  input.focus();
+    shell.style.display = 'none';
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const val = input.value.trim();
+      if (!val) return;
+
+      const hash = await sha256(val);
+      if (hash === HASH) {
+        sessionStorage.setItem('tc-auth', '1');
+        gate.style.transition = 'opacity .3s';
+        gate.style.opacity = '0';
+        shell.style.display = '';
+        setTimeout(() => gate.remove(), 300);
+      } else {
+        error.textContent = 'Incorrect password';
+        input.value = '';
+        input.focus();
+        input.style.borderColor = 'var(--red)';
+        setTimeout(() => { error.textContent = ''; input.style.borderColor = 'var(--border-2)'; }, 2000);
+      }
+    });
+
+    input.focus();
+  });
 })();
 </script>
 
